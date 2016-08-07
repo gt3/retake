@@ -1,4 +1,4 @@
-const {identity, wrap, unwrap} = require('../../utils')
+const {identity, unwrap} = require('../../utils')
 const {empty} = require('../factory')
 
 function reduce(fn, init) {
@@ -23,7 +23,7 @@ const getMerge = (comparer) => (acc) => {
 
 const getSelector = comparer => (function* selector() {
     yield initialize
-    while(true) yield partition(comparer)
+    while(true) yield partition(comparer) //eslint-disable-line
 })()
 
 function sort(comparer) {

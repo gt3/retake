@@ -1,4 +1,5 @@
-const {identity, wrap, unwrap, iteratorUtils:{pullReversed}, prototypeUtils:{ExtendPrototypeWith}} = require('../utils')
+const {identity, wrap, unwrap, iteratorUtils:{pullReversed}} = require('../utils')
+let empty
 
 class List {
     constructor(head = wrap(), getNext) {
@@ -26,7 +27,7 @@ class List {
     }
 }
 
-const empty = new class extends List {
+empty = new class extends List {
     get done() { return true }
     next() { return this }
     [Symbol.iterator]() { return this }

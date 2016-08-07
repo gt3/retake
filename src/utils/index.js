@@ -60,23 +60,23 @@ const iteratorUtils = {pullNext, pullReversed, toIterator, getIterator, linkIter
 
 const preventOverridesDescriptors = {configurable:false}
 
-function SetOwnPropDescriptors(proto, descriptors=preventOverridesDescriptors) {
+function setOwnPropDescriptors(proto, descriptors=preventOverridesDescriptors) {
     let propsWithDescriptors = Object.assign({}, ...Object.getOwnPropertyNames(proto).map(prop => ({[prop]: descriptors })))
     Object.defineProperties(proto, propsWithDescriptors)
 }
 
-function ExtendPrototype(proto, extensions, preventOverrides=true) {
+function extendPrototype(proto, extensions, preventOverrides=true) {
     if(!extensions || !extensions.length) return proto
-    if(preventOverrides) SetOwnPropDescriptors(proto)
+    if(preventOverrides) setOwnPropDescriptors(proto)
     let [first, ...rest] = extensions
     Object.assign(proto, first)
-    return ExtendPrototype(proto, rest, preventOverrides)
+    return extendPrototype(proto, rest, preventOverrides)
 }
 
-function ExtendPrototypeWith(proto, ...extensions) {
-    return ExtendPrototype(proto, extensions)
+function extendPrototypeWith(proto, ...extensions) {
+    return extendPrototype(proto, extensions)
 }
 
-const prototypeUtils = { ExtendPrototype, ExtendPrototypeWith }
+const prototypeUtils = { extendPrototype, extendPrototypeWith }
 
 module.exports = Object.assign(utils, {iteratorUtils, prototypeUtils})

@@ -1,14 +1,14 @@
-const {wrap, unwrap, iteratorUtils: {getIterator}} = require('../../utils')
+const {unwrap, iteratorUtils: {getIterator}} = require('../../utils')
 
 function flatten(levels) {
-    return (reducer = Reducers.append) => (acc, node, next) => {
+    return (reducer) => (acc, node, next) => {
         if(!next) return reducer(acc)
         function flattenLevels(iterator, n) {
-            let value, done
+            let value, done, update = (newacc) => (acc = newacc)
             while(({value, done} = iterator.next()) && !done) {
                 const iteratorInner = getIterator(unwrap(value))
                 if(iteratorInner && --n > 0) flattenLevels(iteratorInner, n)
-                else reducer(acc, value, (newacc) => (acc = newacc))
+                else reducer(acc, value, update)
             }
             return acc
         }
