@@ -10,3 +10,6 @@ console.log('-----')
 let z = r.toZipper().unzip(3)
 console.log('-----')
 console.log(z.focus)
+console.log('-----')
+r = r.append(8,9)
+for(let i of r) {  console.log('%j',i); }

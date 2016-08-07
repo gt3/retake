@@ -58,18 +58,20 @@ const iteratorUtils = {pullNext, pullReversed, toIterator, getIterator, linkIter
 
 /******** Prototype Utils *******/
 
-const preventOverridesDescriptors = {configurable:false}
+const preventOverridesDescriptors = {writable: false}
+const getOwnProps = (obj) => obj ? Object.getOwnPropertyNames(obj) : []
+const getOwnWritableProps = (obj) => getOwnProps(obj).filter(prop => Object.getOwnPropertyDescriptor(obj, prop).writable)
 
 function setOwnPropDescriptors(proto, descriptors=preventOverridesDescriptors) {
-    let propsWithDescriptors = Object.assign({}, ...Object.getOwnPropertyNames(proto).map(prop => ({[prop]: descriptors })))
+    let propsWithDescriptors = Object.assign({}, ...getOwnWritableProps(proto).map(prop => ({[prop]: descriptors})))
     Object.defineProperties(proto, propsWithDescriptors)
 }
 
 function extendPrototype(proto, extensions, preventOverrides=true) {
     if(!extensions || !extensions.length) return proto
     if(preventOverrides) setOwnPropDescriptors(proto)
-    let [first, ...rest] = extensions
-    Object.assign(proto, first)
+    let [extension, ...rest] = extensions
+    Object.assign(proto, extension)
     return extendPrototype(proto, rest, preventOverrides)
 }
 
