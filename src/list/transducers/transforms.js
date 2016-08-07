@@ -18,7 +18,7 @@ class Transformers {
     static map(fn) {
         return (reducer) => function mapping(acc, node, next) {
             if(!next) return reducer(acc)
-            const value = unwrap(node), wrapCheck = check => check == value ? node : wrap(check)
+            const value = unwrap(node), wrapCheck = check => check === value ? node : wrap(check)
             return reducer(acc, wrapCheck(fn.call(value, value)), next)
         }
     }

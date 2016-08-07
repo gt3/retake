@@ -31,7 +31,7 @@ function sort(comparer) {
     const selector = getSelector(comparer)
     return (reducer = identity) => (acc, node, next) => {
         return next ? selector.next().value(acc, node, next) :
-            reducer == identity ? reducer(merge(acc)) : reduce(reducer)(merge(acc))
+            reducer === identity ? reducer(merge(acc)) : reduce(reducer)(merge(acc))
     }
 }
 
