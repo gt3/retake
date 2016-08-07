@@ -1,0 +1,27 @@
+{
+  "name": "retake",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "file:///C:\\\\Users\\\\Ankit\\\\OneDrive for Business\\\\Code\\\\retake"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.13.2",
+    "babel-eslint": "^6.1.2",
+    "babel-preset-es2015": "^6.13.2",
+    "eslint": "^3.2.2",
+    "mocha": "^3.0.1"
+  }
+}
