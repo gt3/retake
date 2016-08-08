@@ -9,7 +9,9 @@ const getComparer = (sortKey, asc) => asc ? isLTE(sortKey) : isGT(sortKey)
 const unwrapNode = (node) => node && node.value !== void(0) ? node.value : node
 const nodeWrapper = (value = sentinel) => (value instanceof Node) ? value : new Node(value)
 
-const utils = { identity, isPrimitiveType, getComparer, unwrap: unwrapNode, wrap: nodeWrapper }
+const memoize0 = (fn, cache=null) => () => cache || (cache = fn())
+
+const utils = { identity, isPrimitiveType, getComparer, unwrap: unwrapNode, wrap: nodeWrapper, memoize0 }
 
 /******** Iterator Utils *******/
 

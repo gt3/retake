@@ -1,5 +1,5 @@
 const Utils = require('../utils')
-const {identity, wrap, unwrap} = Utils
+const {identity, wrap, unwrap, memoize0} = Utils
 const {pullNext, pullReversed, linkIterables, sequenceYielder} = Utils.iteratorUtils
 const {List, empty} = require('./list')
 
@@ -27,7 +27,7 @@ class Factory {
     }
     static fromValue(value, iterable=empty, toIterator=linkIterables) {
         const node = wrap(value), iterator = toIterator(iterable)
-        return new List(node, next(value, iterator))
+        return new List(node, memoize0(next(value, iterator)))
     }
 }
 

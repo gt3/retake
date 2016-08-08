@@ -3,13 +3,13 @@ let empty
 
 class List {
     constructor(head = wrap(), getNext) {
-        //console.log('\t\t',head && head.value,'new List <<<<')
+        console.log('\t\t',head && head.value,'new List <<<<')
         Object.assign(this, {head, getNext})
     }
     get done() { return !!this.head.sentinel }
     get lazy() { return true }
     get first() { return this.done ? void(0) : unwrap(this.head) }
-    get tail() { return this._cached || (this._cached = this.getNext()) }
+    get tail() { return this.getNext() }
     reduce(fn, acc=empty) {
         if(this.done) return fn.call(this, acc)
         return fn.call(this, acc, this.head, (acc) => this.tail.reduce(fn, acc))

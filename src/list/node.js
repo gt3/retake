@@ -1,5 +1,6 @@
 class Node {
     constructor(value) {
+        console.log('\t\t',value,'new Node <<<<')
         this.value = value
     }
 }
