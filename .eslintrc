@@ -24,6 +24,14 @@
             "allow-null"
         ],
         "guard-for-in": "warn",
+        "max-len": [
+            "warn",
+            105,
+            2,
+            {
+                "ignoreUrls": true
+            }
+        ],
         "new-cap": [
             "warn",
             {

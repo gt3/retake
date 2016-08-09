@@ -1,15 +1,17 @@
-let {identity, wrap, unwrap, iteratorUtils:{pullReversed}, prototypeUtils: {seal}} = require('../utils')
+let {identity, wrap, unwrap,
+    iteratorUtils: {pullReversed},
+    prototypeUtils: {seal}} = require('../utils')
 
 class List {
     constructor(head = wrap(), getNext) {
-        Object.assign(this, {head, getNext})
+        Object.assign(this, { head, getNext })
     }
     get done() { return !!this.head.sentinel }
     get lazy() { return true }
-    get first() { return this.done ? void(0) : unwrap(this.head) }
+    get first() { return this.done ? void (0) : unwrap(this.head) }
     get tail() { return this.getNext() }
-    reduce(fn, acc=List.empty) {
-        if(this.done) return fn.call(this, acc)
+    reduce(fn, acc = List.empty) {
+        if (this.done) return fn.call(this, acc)
         return fn.call(this, acc, this.head, (acc) => this.tail.reduce(fn, acc))
     }
     iterateInReverse(rawOut) { return pullReversed(this.reduce(List.getEnumerator(rawOut))) }
@@ -17,7 +19,7 @@ class List {
     static getEnumerator(rawOut) {
         const extractValue = rawOut ? identity : unwrap
         return function* enumerate(acc, node, next) {
-            if(next) {
+            if (next) {
                 yield extractValue(node)
                 yield* next(acc)
             }

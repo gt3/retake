@@ -34,7 +34,9 @@ function* sequenceYielder(fn, value) {
 }
 
 const toIterable = (iterable) => typeof iterable === 'function' ? iterable() : iterable
-const getIterator = (iterable) => iterable && !iterable.hasOwnProperty(Symbol.iterator) && iterable[Symbol.iterator] && iterable[Symbol.iterator](iterable.lazy)
+const getIterator = (iterable) => 
+                        iterable && !iterable.hasOwnProperty(Symbol.iterator) &&
+                            iterable[Symbol.iterator] && iterable[Symbol.iterator](iterable.lazy)
 const toIterator = (iterable) => getIterator(iterable) || toIterable(iterable)
 
 function* iteratorYielder(...iterators) {
@@ -54,7 +56,8 @@ const linkIterators = warmup(iteratorYielder)
 
 const linkIterables = (...iterables) => linkIterators(...iterables.map(iterable => toIterator(iterable)))
 
-const iteratorUtils = {pullNext, pullReversed, toIterator, getIterator, linkIterators, linkIterables, sequenceYielder}
+const iteratorUtils = {pullNext, pullReversed, toIterator, getIterator, 
+                            linkIterators, linkIterables, sequenceYielder}
 
 /************************/
 
@@ -62,11 +65,12 @@ const iteratorUtils = {pullNext, pullReversed, toIterator, getIterator, linkIter
 
 const readable = {writable: false}
 const getOwnProps = (obj) => obj ? Object.getOwnPropertyNames(obj) : []
-const getOwnWritableProps = (obj) => getOwnProps(obj).filter(prop => Object.getOwnPropertyDescriptor(obj, prop).writable)
+const writableProps = (obj) => 
+        getOwnProps(obj).filter(prop => Object.getOwnPropertyDescriptor(obj, prop).writable)
 
 function setPropsReadable(target) {
-    let readableProps = Object.assign({}, ...getOwnWritableProps(target).map(prop => ({[prop]: readable})))
-    Object.defineProperties(target, readableProps)
+    let props = Object.assign({}, ...writableProps(target).map(p => ({[p]: readable})))
+    Object.defineProperties(target, props)
 }
 
 function assign(target, extensions, preventOverrides=true) {

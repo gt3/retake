@@ -1,6 +1,5 @@
 const {empty} = require('../list/factory')
 const {Reducers: {prepend,append}, Splitters: {splitAt}} = require('../list/transforms')
-//const reverse = (list) => list.reduce(prepend)
 
 class ZipperTarget {
     constructor(target) { this._target = target }
@@ -21,7 +20,8 @@ class ZipperTarget {
         let gen = ZipperTarget.unzipper(zipper)
         let {value:unzipped, done} = gen.next()
         while(!done) {
-            ({value:unzipped = unzipped, done} = pred(unzipped.focus) ? gen.next(action(unzipped)) : gen.next(unzipped))
+            ({value:unzipped = unzipped, done} 
+                = pred(unzipped.focus) ? gen.next(action(unzipped)) : gen.next(unzipped))
         }
         return unzipped.list
     }
@@ -71,4 +71,4 @@ class Zipper extends ZipperTarget {
     }
 }
 
-module.exports = Zipper //{ toZipper: Zipper.create }
+module.exports = Zipper

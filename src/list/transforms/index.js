@@ -52,7 +52,8 @@ class Splitters {
     static splitWhen(pred) {
         return (reducer) => function splittingWhen(acc, node, next) {
             const value = unwrap(node)
-            return !next || pred.call(value, value) ? reducer(acc.makeSiblingOf(this)) : reducer(acc, node, next)
+            return !next || pred.call(value, value) 
+                    ? reducer(acc.makeSiblingOf(this)) : reducer(acc, node, next)
         }
     }
     static splitAt(n) {
