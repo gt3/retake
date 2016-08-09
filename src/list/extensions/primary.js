@@ -1,4 +1,4 @@
-const Factory = require('./factory')
+const Factory = require('../factory')
 
 function append(...values) { return this.appendCollection(values) }
 

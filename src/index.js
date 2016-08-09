@@ -1,13 +1,10 @@
 const List = require('./list/list')
 const {prototypeUtils: {extend}} = require('./utils')
-
-const operations = require('./list/operations')
-const toZipper = require('./zipper/zipper')
-
-extend(List, operations, toZipper)
+const extensions = require('./list/extensions')
+extend(List, ...extensions)
 
 const retake = require('./list/factory')
 const zipperActions = require('./zipper/action-templates')
-const transforms = require('./list/transducers/transforms')
+const transforms = require('./list/transforms')
 
 module.exports = {retake, transforms, zipperActions}

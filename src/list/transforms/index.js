@@ -1,5 +1,5 @@
-const sort = require('./transforms-sort')
-const flatten = require('./transforms-flatten')
+const sort = require('./sort')
+const flatten = require('./flatten')
 const {identity, getComparer, wrap, unwrap} = require('../../utils')
 
 class Reducers {

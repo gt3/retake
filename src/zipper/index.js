@@ -1,12 +1,12 @@
 const {empty} = require('../list/factory')
-const {Reducers: {prepend,append,counter}, Splitters: {splitAt}} = require('../list/transducers/transforms')
-const reverse = (list) => list.reduce(prepend)
+const {Reducers: {prepend,append}, Splitters: {splitAt}} = require('../list/transforms')
+//const reverse = (list) => list.reduce(prepend)
 
 class ZipperTarget {
     constructor(target) { this._target = target }
     get focus() { return this._target.first }
-    get size() { return this._target.reduce(counter, 0) }
-    get resultList() { return reverse(this._target) }
+    get size() { return this._target.size() }
+    get resultList() { return this._target.reverse() }
     get list() { return this._target }
     [Symbol.iterator](...args) { return this.resultList[Symbol.iterator](...args) }
     update(value) { return this._target.tail.prepend(value) }
@@ -71,4 +71,4 @@ class Zipper extends ZipperTarget {
     }
 }
 
-module.exports = { toZipper: Zipper.create }
+module.exports = Zipper //{ toZipper: Zipper.create }
