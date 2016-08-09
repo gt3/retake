@@ -1,16 +1,14 @@
-const {identity, wrap, unwrap, iteratorUtils:{pullReversed}} = require('../utils')
-let empty
+let {identity, wrap, unwrap, iteratorUtils:{pullReversed}, prototypeUtils: {seal}} = require('../utils')
 
 class List {
     constructor(head = wrap(), getNext) {
-        console.log('\t\t',head && head.value,'new List <<<<')
         Object.assign(this, {head, getNext})
     }
     get done() { return !!this.head.sentinel }
     get lazy() { return true }
     get first() { return this.done ? void(0) : unwrap(this.head) }
     get tail() { return this.getNext() }
-    reduce(fn, acc=empty) {
+    reduce(fn, acc=List.empty) {
         if(this.done) return fn.call(this, acc)
         return fn.call(this, acc, this.head, (acc) => this.tail.reduce(fn, acc))
     }
@@ -27,10 +25,10 @@ class List {
     }
 }
 
-empty = new class extends List {
+List.empty = new class extends List {
     get done() { return true }
     next() { return this }
     [Symbol.iterator]() { return this }
 }
 
-module.exports = {List, empty}
+module.exports = seal(List)

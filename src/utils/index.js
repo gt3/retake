@@ -60,27 +60,33 @@ const iteratorUtils = {pullNext, pullReversed, toIterator, getIterator, linkIter
 
 /******** Prototype Utils *******/
 
-const preventOverridesDescriptors = {writable: false}
+const readable = {writable: false}
 const getOwnProps = (obj) => obj ? Object.getOwnPropertyNames(obj) : []
 const getOwnWritableProps = (obj) => getOwnProps(obj).filter(prop => Object.getOwnPropertyDescriptor(obj, prop).writable)
 
-function setOwnPropDescriptors(proto, descriptors=preventOverridesDescriptors) {
-    let propsWithDescriptors = Object.assign({}, ...getOwnWritableProps(proto).map(prop => ({[prop]: descriptors})))
-    Object.defineProperties(proto, propsWithDescriptors)
+function setPropsReadable(target) {
+    let readableProps = Object.assign({}, ...getOwnWritableProps(target).map(prop => ({[prop]: readable})))
+    Object.defineProperties(target, readableProps)
 }
 
-function extendPrototype(proto, extensions, preventOverrides=true) {
-    if(!extensions || !extensions.length) return proto
-    if(preventOverrides) setOwnPropDescriptors(proto)
+function assign(target, extensions, preventOverrides=true) {
+    if(!extensions || !extensions.length) return target
+    if(preventOverrides) setPropsReadable(target)
     let [extension, ...rest] = extensions
-    Object.assign(proto, extension)
-    return extendPrototype(proto, rest, preventOverrides)
+    Object.assign(target, extension)
+    return assign(target, rest, preventOverrides)
 }
 
-function extendPrototypeWith(proto, ...extensions) {
-    return extendPrototype(proto, extensions)
+function extend(target, ...extensions) {
+    assign(target.prototype, extensions)
+    return target
 }
 
-const prototypeUtils = { extendPrototype, extendPrototypeWith }
+function seal(target) {
+    setPropsReadable(target.prototype)
+    return target
+}
+
+const prototypeUtils = { extend, seal }
 
 module.exports = Object.assign(utils, {iteratorUtils, prototypeUtils})

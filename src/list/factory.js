@@ -1,7 +1,7 @@
 const Utils = require('../utils')
 const {identity, wrap, unwrap, memoize0} = Utils
 const {pullNext, pullReversed, linkIterables, sequenceYielder} = Utils.iteratorUtils
-const {List, empty} = require('./list')
+const List = require('./list'), empty = List.empty
 
 const next = (value, iterator) => () => Factory.fromIterator(iterator, empty, pullNext(unwrap(value)))
 
