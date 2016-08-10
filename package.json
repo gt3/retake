@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --ignore-path .gitignore src/**"
+    "pretest": "eslint --ignore-path .gitignore src/**",
+    "publish-node": "npm publish --tag node"
   },
   "repository": {
     "type": "git",
