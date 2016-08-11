@@ -75,19 +75,20 @@ function setPropsReadable(target) {
 
 function assign(target, extensions, preventOverrides=true) {
     if(!extensions || !extensions.length) return target
-    if(preventOverrides) setPropsReadable(target)
+    //if(preventOverrides) setPropsReadable(target)
     let [extension, ...rest] = extensions
     Object.assign(target, extension)
     return assign(target, rest, preventOverrides)
 }
 
 function extend(target, ...extensions) {
-    assign(target.prototype, extensions)
+    const o = assign(Object.create(target.prototype), extensions)
+    target.prototype = Object.create(o)
     return target
 }
 
 function seal(target) {
-    setPropsReadable(target.prototype)
+    //setPropsReadable(target.prototype)
     return target
 }
 

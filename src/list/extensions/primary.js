@@ -1,4 +1,4 @@
-const Factory = require('../factory')
+/*const Factory = require('../factory')
 
 function append(...values) { return this.appendCollection(values) }
 
@@ -12,4 +12,4 @@ function prependInReverse(iterable) { return Factory.fromReversed(iterable, this
 
 function makeSiblingOf(...values) { return Factory.of(this, ...values) }
 
-module.exports = {append,appendCollection,prepend,prependCollection,prependInReverse,makeSiblingOf}
+module.exports = {append,appendCollection,prepend,prependCollection,prependInReverse,makeSiblingOf}*/

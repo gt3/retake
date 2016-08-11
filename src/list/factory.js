@@ -1,7 +1,46 @@
 const Utils = require('../utils')
 const {identity, wrap, unwrap, memoize0} = Utils
 const {pullNext, pullReversed, linkIterables, sequenceYielder} = Utils.iteratorUtils
-const List = require('./list'), empty = List.empty
+let empty
+
+function List(head = wrap(), getNext) {
+    Object.assign(this, { head, getNext })
+}
+
+function getEnumerator(rawOut) {
+    const extractValue = rawOut ? identity : unwrap
+    return function* enumerate(acc, node, next) {
+        if (next) {
+            yield extractValue(node)
+            yield* next(acc)
+        }
+    }
+}
+
+List.prototype = {
+    get done() { return !!this.head.sentinel },
+    get lazy() { return true },
+    get first() { return this.done ? void (0) : unwrap(this.head) },
+    get tail() { return this.getNext() },
+    reduce(fn, acc = empty) {
+        if (this.done) return fn.call(this, acc)
+        return fn.call(this, acc, this.head, (acc) => this.tail.reduce(fn, acc))
+    },
+    iterateInReverse(rawOut) { return pullReversed(this.reduce(getEnumerator(rawOut))) },
+    [Symbol.iterator](rawOut) { return this.reduce(getEnumerator(rawOut)) },
+    append(...values) { return this.appendCollection(values) },
+    appendCollection(iterable) { return Factory.from(this, iterable) },
+    prepend(...values) { return this.prependCollection(values) },
+    prependCollection(iterable) { return Factory.from(iterable, this) },
+    prependInReverse(iterable) { return Factory.fromReversed(iterable, this) },
+    makeSiblingOf(...values) { return Factory.of(this, ...values) }
+}
+
+empty = new class extends List {
+    get done() { return true }
+    next() { return this }
+    [Symbol.iterator]() { return this }
+}
 
 const next = (value, iterator) => 
     () => Factory.fromIterator(iterator, empty, pullNext(unwrap(value)))
@@ -32,6 +71,4 @@ class Factory {
     }
 }
 
-Factory.empty = empty
-
-module.exports = Factory
+module.exports = {Factory, List, empty}
