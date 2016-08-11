@@ -1,6 +1,6 @@
 const sort = require('./sort')
 const flatten = require('./flatten')
-const {identity, getComparer, wrap, unwrap} = require('../../utils')
+const {identity, getComparer, wrap, unwrap} = require('../utils')
 
 class Reducers {
     static prepend(acc, node, next) {

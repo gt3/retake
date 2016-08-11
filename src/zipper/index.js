@@ -1,5 +1,5 @@
-const {empty} = require('../list/factory')
-const {Reducers: {prepend,append}, Splitters: {splitAt}} = require('../list/transforms')
+const {empty} = require('../retake')
+const {Reducers: {prepend,append}, Splitters: {splitAt}} = require('../transforms')
 
 class ZipperTarget {
     constructor(target) { this._target = target }

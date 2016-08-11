@@ -1,10 +1,8 @@
-const List = require('./list/list')
-const {prototypeUtils: {extend}} = require('./utils')
-const extensions = require('./list/extensions')
-extend(List, ...extensions)
+const retake = require('./retake')
+const transformExtensions = require('./transforms/extensions')
+retake.extend(transformExtensions)
 
-const retake = require('./list/factory')
+const transforms = require('./transforms')
 const zipperActions = require('./zipper/action-templates')
-const transforms = require('./list/transforms')
 
-module.exports = {retake, transforms, zipperActions}
+module.exports = Object.assign(retake,{transforms},{zipperActions})
