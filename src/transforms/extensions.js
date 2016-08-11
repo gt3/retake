@@ -1,8 +1,8 @@
-const {identity} = require('../../utils')
-const Zipper = require('../../zipper')
+const {identity} = require('../utils')
+const Zipper = require('../zipper')
 const {Reducers: {prepend, append, counter},
     Transformers: {map, filter, take, skip, takeUntil, flatten, sort},
-    Splitters: {splitWhen, splitAt}} = require('../transforms')
+    Splitters: {splitWhen, splitAt}} = require('./index')
 
 const toExtension = (fn, reducer = append, init) =>
     function (...args) { return this.reduce(fn(...args)(reducer), init) }

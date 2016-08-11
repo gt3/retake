@@ -1,4 +1,4 @@
-const {unwrap, iteratorUtils: {getIterator}} = require('../../utils')
+const {unwrap, iteratorUtils: {getIterator}} = require('../utils')
 
 function flatten(levels) {
     return (reducer) => (acc, node, next) => {

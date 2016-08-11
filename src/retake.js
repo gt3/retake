@@ -1,6 +1,7 @@
-const Utils = require('../utils')
+const Utils = require('./utils')
 const {identity, wrap, unwrap, memoize0} = Utils
 const {pullNext, pullReversed, linkIterables, sequenceYielder} = Utils.iteratorUtils
+const {extend} = Utils.prototypeUtils
 let empty
 
 function List(head = wrap(), getNext) {
@@ -69,6 +70,8 @@ class Factory {
         const node = wrap(value), iterator = toIterator(iterable)
         return new List(node, memoize0(next(value, iterator)))
     }
+    static extend(...extensions) { extend(List, ...extensions) }
 }
+Factory.empty = empty
 
-module.exports = {Factory, List, empty}
+module.exports = Factory

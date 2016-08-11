@@ -1,9 +1,7 @@
-const {Factory, List} = require('./list/factory')
-const {prototypeUtils: {extend}} = require('./utils')
-const extensions = require('./list/extensions')
-extend(List, ...extensions)
-
+const retake = require('./retake')
 const zipperActions = require('./zipper/action-templates')
-const transforms = require('./list/transforms')
+const transforms = require('./transforms')
+const transformExtensions = require('./transforms/extensions')
+retake.extend(transformExtensions)
 
-module.exports = {retake: Factory, transforms, zipperActions}
+module.exports = {retake, transforms, zipperActions}

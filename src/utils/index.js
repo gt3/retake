@@ -1,4 +1,4 @@
-const {Node, sentinel} = require('../list/node')
+const {Node, sentinel} = require('../node')
 
 const identity = (x) => x
 const isPrimitiveType = (value) => Object(value) !== value

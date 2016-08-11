@@ -1,5 +1,5 @@
-const {identity, unwrap} = require('../../utils')
-const {empty} = require('../factory')
+const {identity, unwrap} = require('../utils')
+const {empty} = require('../retake')
 
 function reduce(fn, init) {
     return (list) => list.reduce(fn, init)
