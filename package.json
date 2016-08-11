@@ -5,7 +5,7 @@
     "node": ">=12.0.0"
   },
   "description": "",
-  "main": "./lib/retake.min.js",
+  "main": "./lib/retake.js",
   "directories": {
     "doc": "doc",
     "test": "test"
@@ -13,7 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretest": "eslint --ignore-path .gitignore src/**",
-    "publish-node": "npm publish --tag node"
+    "publish-node": "npm publish --tag node",
+    "build": "webpack && webpack --env.compress"
   },
   "repository": {
     "type": "git",
@@ -33,5 +34,6 @@
   "dependencies": {
     "babel-polyfill": "^6.13.0",
     "babel-runtime": "^6.11.6"
-  }
+  },
+  "files": ["lib"]
 }
