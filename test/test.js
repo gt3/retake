@@ -1,5 +1,5 @@
-const {retake, transforms} = require('../src')
-const {Reducers: {prepend, append, counter}, Transformers: {sort,map,filter,take,skip,takeUntil,flatten}, Splitters: {splitAt}} = transforms
+const retake = require('../src')
+const {Reducers: {prepend, append, counter}, Transformers: {sort,map,filter,take,skip,takeUntil,flatten}, Splitters: {splitAt}} = retake.transforms
 let r = retake.of(1,2,3,4,5,6,7,8,9)
 console.log('-----')
 for(let i of r) {  console.log('%j',i); }
