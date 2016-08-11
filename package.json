@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretest": "eslint --ignore-path .gitignore src/**",
     "publish-node": "npm publish --tag node",
-    "build": "webpack && webpack --env.compress"
+    "build": "webpack && webpack --env.transpile-compress"
   },
   "repository": {
     "type": "git",

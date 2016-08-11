@@ -1,11 +1,12 @@
 var webpack = require('webpack');
 var path = require('path');
-const minify = process.argv.indexOf('--env.compress') !== -1;
+const babelify = process.argv.indexOf('--env.transpile-compress') !== -1;
 var uglify = new webpack.optimize.UglifyJsPlugin({compress: {warnings: true, drop_console: true, dead_code: false, conditionals: false}});
-var plugins = [], filename = 'retake.js';
-if(minify) {
+var plugins = [], loaders = [], filename = 'retake.js';
+if(babelify) {
     plugins.push(uglify);
-    filename = 'retake.min.js';
+    filename = 'retake.es5.min.js';
+    loaders.push({ test: /\.js$/, exclude: /node_modules/, loader: 'babel' })
 }
 module.exports = {
     devtool: "source-map",
@@ -18,9 +19,7 @@ module.exports = {
         umdNamedDefine: true
     },
     module: {
-      loaders: [
-          { test: /\.js$/, exclude: /node_modules/, loader: 'babel' }
-      ]
+      loaders: loaders
     },
     plugins: plugins
 };
