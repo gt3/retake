@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretest": "eslint --ignore-path .gitignore src/**",
-    "build": "webpack && webpack --env.transpile-compress",
+    "build": "webpack & webpack --env.transpile-compress",
     "publish-built": "npm publish --tag built"
   },
   "repository": {
@@ -31,5 +31,7 @@
   "dependencies": {
     "babel-runtime": "^6.11.6"
   },
-  "files": ["lib"]
+  "files": [
+    "lib"
+  ]
 }
