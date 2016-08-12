@@ -29,8 +29,9 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "babel-polyfill": "^6.13.0",
     "babel-runtime": "^6.11.6"
   },
-  "files": ["lib"]
+  "files": [
+    "lib"
+  ]
 }
