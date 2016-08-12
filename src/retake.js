@@ -4,7 +4,7 @@ const {pullNext, pullReversed, linkIterables, sequenceYielder} = Utils.iteratorU
 const {extend} = Utils.prototypeUtils
 let empty
 
-function List(head = wrap(), getNext) {
+function List(head = wrap(), getNext = () => empty) {
     Object.assign(this, { head, getNext })
 }
 
