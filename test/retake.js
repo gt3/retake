@@ -228,16 +228,13 @@ describe('List', function() {
     })
     describe('extend prototype', function() {
         it('should register extension', function() {
+            let arr = [1,2,3], r_untouched = retake.from(arr)
             let ext = { toArray: function() { return [...this] }, dummy: 'dummy' }
             retake.extend(ext)
-            let arr = [1,2,3], r = retake.from(arr)
+            let r = retake.from(arr)
             eq(r.dummy, ext.dummy)
             oeq(r.toArray(), arr)
-        })
-    })
-    describe('transform extensions', function() {
-        it('map', function() {
-
+            neq(r_untouched.dummy, ext.dummy)
         })
     })
 });
