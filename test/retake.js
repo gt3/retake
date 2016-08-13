@@ -9,18 +9,18 @@ const arrEq = (...arrs) => {
 
 describe('Empty List', function() {
     describe('principles', function() {
-        it('should identify itself as empty', function(){
+        it('should identify itself as empty', function() {
             assert.ok(empty.done)
         })
-        it('should iterate (0 times)', function(){
+        it('should iterate (0 times)', function() {
             let counter = 0
             for(let i of empty) { counter++ }
             eq(counter, 0)
         })
-        it('should contain an element of undefined value', function(){
+        it('should contain an element of undefined value', function() {
             eq(empty.first, void(0))
         })
-        it('should have an empty tail', function(){
+        it('should have an empty tail', function() {
             eq(empty.tail, empty)
         })
     })
@@ -153,17 +153,62 @@ describe('List', function() {
             assert.ok(arrEq([...r], arr))
             assert.ok(arrEq([...e], []))
         })
+        it('should be able to iterate in reverse order', function() {
+            let arr = [1,2,3], r = retake.from(arr), e = retake.from([],[])
+            assert.ok(arrEq([...r.iterateInReverse()], arr.reverse()))
+            assert.ok(arrEq([...e.iterateInReverse()], []))
+        })
         it('should be able to return nodes in raw format', function() {
             let arr = [1,2,3], r = retake.from(arr), rawOut = true;
-            const raw = [...r[Symbol.iterator](rawOut)]
+            const raw = [...r[Symbol.iterator](rawOut)], rawRev = [...r.iterateInReverse(rawOut)]
             assert.ok(!arrEq(raw, arr))
             assert.ok(arrEq(raw, [...arr.map(wrap)]))
+            assert.ok(arrEq(rawRev, [...arr.reverse().map(wrap)]))
         })
         it('should call reducing function to reduce itself', function() {
             let r = retake.of(1,2,3), add = (acc, node, next) => next ? next(acc+unwrap(node)) : acc
             let sum = r.reduce(add, 0)
             eq(sum, 6)
         })
-
+        it('should prepend arbitrary number of elements', function() {
+            let arr = [1,2,3], r = retake.from(arr), r0 = r.prepend()
+            let r2 = r.prepend(0), r3 = r.prepend(-1, 0)
+            eq(r0.first, r.first)
+            assert.ok(arrEq([...r2],[0, ...arr]))
+            assert.ok(arrEq([...r3],[-1, 0, ...arr]))
+        })
+        it('should prepend a collection of elements', function() {
+            let arr = [1,2,3], arr2 = [-1, 0], r = retake.from(arr)
+            let r0 = r.prependCollection([]), r2 = r.prependCollection(arr2)
+            eq(r0.first, r.first)
+            assert.ok(arrEq([...r2],[...arr2, ...arr]))
+        })
+        it('should prepend a collection of elements in reverse order', function() {
+            let arr = [1,2,3], arr2 = [-1, 0], r = retake.from(arr)
+            let r0 = r.prependInReverse([]), r2 = r.prependInReverse(arr2)
+            eq(r0.first, r.first)
+            assert.ok(arrEq([...r2],[...arr2.reverse(), ...arr]))
+        })
+        it('should append arbitrary number of elements', function() {
+            let arr = [1,2,3], r = retake.from(arr), r0 = r.append()
+            let r2 = r.append(4), r3 = r.append(5, 6)
+            eq(r0.first, r.first)
+            assert.ok(arrEq([...r2],[...arr, 4]))
+            assert.ok(arrEq([...r3],[...arr, 5, 6]))
+        })
+        it('should append a collection of elements', function() {
+            let arr = [1,2,3], arr2 = [4, 5], r = retake.from(arr)
+            let r0 = r.appendCollection([]), r2 = r.appendCollection(arr2)
+            eq(r0.first, r.first)
+            assert.ok(arrEq([...r2],[...arr, ...arr2]))
+        })
+        it('should prepend itself as a sibling to another collection', function() {
+            let arr = [1,2,3], arr2 = [4, 5]
+            let r1 = retake.from(arr), r2 = retake.from(arr2)
+            let r3 = r1.makeSiblingOf(r2)
+            let [...rest] = r3
+            assert.ok(arrEq([...r3.first], arr))
+            assert.ok(arrEq([...r3.tail.first], arr2))
+        })
     })
 });
