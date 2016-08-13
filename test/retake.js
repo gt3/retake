@@ -2,10 +2,12 @@ let assert = require('assert')
 let retake = require('../src/retake'), {wrap, unwrap} = require('../src/utils')
 const empty = retake.empty, eq = assert.strictEqual, neq = assert.notStrictEqual
 const str = JSON.stringify
-const arrEq = (...arrs) => {
-  let [first, ...rest] = arrs, t = str(first);
+const compareObjects = (...objs) => {
+  let [first, ...rest] = objs, t = str(first);
   return rest.every(v => t === str(v))
 }
+const arrEq = (a1, a2, ...args) => assert.ok.call(null, compareObjects(a1,a2), ...args)
+const arrNeq = (a1, a2, ...args) => assert.ok.call(null, !compareObjects(a1,a2), ...args)
 
 describe('Empty List', function() {
     describe('principles', function() {
@@ -70,7 +72,7 @@ describe('List', function() {
         it('should not repull an element from source (memoize next)', function() {
             let pulled = false, gen = function*() { while(!pulled) { pulled=true; yield 'a'; yield 'b'; } }
             let r = retake.from(gen)
-            assert.ok(arrEq([...r], [...r]))
+            arrEq([...r], [...r])
         })
     })
     describe('construction', function() {
@@ -150,20 +152,20 @@ describe('List', function() {
         })
         it('should be iterable (per protocol spec)', function() {
             let arr = [1,2,3], r = retake.from(arr), e = retake.from([],[])
-            assert.ok(arrEq([...r], arr))
-            assert.ok(arrEq([...e], []))
+            arrEq([...r], arr)
+            arrEq([...e], [])
         })
         it('should be able to iterate in reverse order', function() {
             let arr = [1,2,3], r = retake.from(arr), e = retake.from([],[])
-            assert.ok(arrEq([...r.iterateInReverse()], arr.reverse()))
-            assert.ok(arrEq([...e.iterateInReverse()], []))
+            arrEq([...r.iterateInReverse()], arr.reverse())
+            arrEq([...e.iterateInReverse()], [])
         })
         it('should be able to return nodes in raw format', function() {
             let arr = [1,2,3], r = retake.from(arr), rawOut = true;
             const raw = [...r[Symbol.iterator](rawOut)], rawRev = [...r.iterateInReverse(rawOut)]
-            assert.ok(!arrEq(raw, arr))
-            assert.ok(arrEq(raw, [...arr.map(wrap)]))
-            assert.ok(arrEq(rawRev, [...arr.reverse().map(wrap)]))
+            arrNeq(raw, arr)
+            arrEq(raw, [...arr.map(wrap)])
+            arrEq(rawRev, [...arr.reverse().map(wrap)])
         })
         it('should call reducing function to reduce itself', function() {
             let r = retake.of(1,2,3), add = (acc, node, next) => next ? next(acc+unwrap(node)) : acc
@@ -175,59 +177,73 @@ describe('List', function() {
             let r2 = r.prepend(0), r3 = r.prepend(-1,0)
             let r4 = empty.prepend(0), r5 = empty.prepend(1,2)
             eq(r0.first, r.first)
-            assert.ok(arrEq([...r2],[0, ...arr]))
-            assert.ok(arrEq([...r3],[-1, 0, ...arr]))
-            assert.ok(arrEq([...r4]), [0])
-            assert.ok(arrEq([...r5]), [1,2])
+            arrEq([...r2],[0, ...arr])
+            arrEq([...r3],[-1, 0, ...arr])
+            arrEq([...r4], [0])
+            arrEq([...r5], [1,2])
         })
         it('should prepend a collection of elements', function() {
             let arr = [1,2,3], arr2 = [-1, 0], r = retake.from(arr)
             let r0 = r.prependCollection([]), r2 = r.prependCollection(arr2)
             let r3 = empty.prependCollection([]), r4 = empty.prependCollection(arr)
             eq(r0.first, r.first)
-            assert.ok(arrEq([...r2],[...arr2, ...arr]))
-            assert.ok(arrEq(r3, empty))
-            assert.ok(arrEq([...r4], [...arr]))
+            arrEq([...r2],[...arr2, ...arr])
+            arrEq(r3, empty)
+            arrEq([...r4], [...arr])
         })
         it('should prepend a collection of elements in reverse order', function() {
             let arr = [1,2,3], arr2 = [-1, 0], r = retake.from(arr)
             let r0 = r.prependInReverse([]), r2 = r.prependInReverse(arr2)
             let r3 = empty.prependInReverse([]), r4 = empty.prependInReverse(arr)
             eq(r0.first, r.first)
-            assert.ok(arrEq([...r2],[...arr2.reverse(), ...arr]))
-            assert.ok(arrEq(r3, empty))
-            assert.ok(arrEq([...r4], [...arr.reverse()]))
+            arrEq([...r2],[...arr2.reverse(), ...arr])
+            arrEq(r3, empty)
+            arrEq([...r4], [...arr.reverse()])
         })
         it('should append arbitrary number of elements', function() {
             let arr = [1,2,3], r = retake.from(arr), r0 = r.append()
             let r2 = r.append(4), r3 = r.append(5, 6)
             let r4 = empty.append(0), r5 = empty.append(1,2)
             eq(r0.first, r.first)
-            assert.ok(arrEq([...r2],[...arr, 4]))
-            assert.ok(arrEq([...r3],[...arr, 5, 6]))
-            assert.ok(arrEq([...r4]), [0])
-            assert.ok(arrEq([...r5]), [1,2])
+            arrEq([...r2],[...arr, 4])
+            arrEq([...r3],[...arr, 5, 6])
+            arrEq([...r4], [0])
+            arrEq([...r5], [1,2])
         })
         it('should append a collection of elements', function() {
             let arr = [1,2,3], arr2 = [4, 5], r = retake.from(arr)
             let r0 = r.appendCollection([]), r2 = r.appendCollection(arr2)
             let r3 = empty.appendCollection([]), r4 = empty.appendCollection(arr)
             eq(r0.first, r.first)
-            assert.ok(arrEq([...r2],[...arr, ...arr2]))
-            assert.ok(arrEq(r3, empty))
-            assert.ok(arrEq([...r4], [...arr]))
+            arrEq([...r2],[...arr, ...arr2])
+            arrEq(r3, empty)
+            arrEq([...r4], [...arr])
         })
         it('should prepend itself as a sibling to another collection', function() {
             let arr = [1,2,3], arr2 = [4, 5]
             let r1 = retake.from(arr), r2 = retake.from(arr2)
             let r3 = r1.makeSiblingOf(r2), r4 = r1.makeSiblingOf(empty)
             let r5 = empty.makeSiblingOf(r1)
-            assert.ok(arrEq([...r3.first], arr))
-            assert.ok(arrEq([...r3.tail.first], arr2))
-            assert.ok(arrEq([...r4.first], arr))
-            assert.ok(arrEq(r4.tail.first, empty))
-            assert.ok(arrEq(r5.first, empty))
-            assert.ok(arrEq([...r5.tail.first], [...r1]))
+            arrEq([...r3.first], arr)
+            arrEq([...r3.tail.first], arr2)
+            arrEq([...r4.first], arr)
+            arrEq(r4.tail.first, empty)
+            arrEq(r5.first, empty)
+            arrEq([...r5.tail.first], [...r1])
+        })
+    })
+    describe('extend prototype', function() {
+        it('should register extension', function() {
+            let ext = { toArray: function() { return [...this] }, dummy: 'dummy' }
+            retake.extend(ext)
+            let arr = [1,2,3], r = retake.from(arr)
+            eq(r.dummy, ext.dummy)
+            arrEq(r.toArray(), arr)
+        })
+    })
+    describe('transform extensions', function() {
+        it('map', function() {
+
         })
     })
 });
