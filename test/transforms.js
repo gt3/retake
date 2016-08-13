@@ -121,11 +121,15 @@ describe('Transforms', function() {
             oeq([...r2.sort()], exp)
             oeq([...r3.sort().map(v => v.key)], exp)
             oeq([...r4.sort('keyyy').map(v => v.keyyy)], exp)
-            //console.log(...r5.sort(),  arr3.sort())
-            oeq([...r5.sort()], arr3.sort())
         })
         it('as transforming reducer', function() {
-
+            oeq([...r.reduce(sort()(append))], arr.sort())
+            oeq([...r.reduce(sort()(prepend))], arr.sort().reverse())
+            oeq([...r.reduce(sort(null, false)(append))], arr.sort().reverse())
+            oeq([...r3.reduce(sort()(map(v => v.key)(append)))], exp)
+        })
+        it.skip('sort nested array should mimic array sort', function() {
+            oeq([...r5.sort()], arr3.sort())
         })
     })
 });
