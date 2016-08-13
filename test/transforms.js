@@ -86,21 +86,24 @@ describe('Transforms', function() {
         })
     })
     describe('flatten', function() {
-        let r, arr
+        let r, arr, r2
         before(function() {
             arr = [1, [2, 3], 4, [[5,6, [7, 8]]], [9]]
             r = retake.from(arr)
+            r2 = retake.of(r)
         })
         it('as extension method', function() {
             oeq([...r.flatten()], [1, 2, 3, 4, [5, 6, [7, 8]], 9])
             oeq([...r.flatten(2)], [1, 2, 3, 4, 5, 6, [7, 8], 9])
             oeq([...r.flatten(99)], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+            oeq([...r2.flatten()], arr)
         })
         it('as transforming reducer', function() {
             oeq([...r.reduce(flatten()(append))], [1, 2, 3, 4, [5,6, [7, 8]], 9])
             oeq([...r.reduce(flatten(2)(append))], [1, 2, 3, 4, 5, 6, [7, 8], 9])
             oeq([...r.reduce(flatten(99)(append))], [1, 2, 3, 4, 5, 6, 7, 8, 9])
             oeq([...r.reduce(flatten(99)(prepend))], [1, 2, 3, 4, 5, 6, 7, 8, 9].reverse())
+            oeq([...r2.reduce(flatten()(append))], arr)
         })
     })
     describe('sort', function() {
@@ -128,7 +131,7 @@ describe('Transforms', function() {
             oeq([...r.reduce(sort(null, false)(append))], arr.sort().reverse())
             oeq([...r3.reduce(sort()(map(v => v.key)(append)))], exp)
         })
-        it.skip('sort nested array should mimic array sort', function() {
+        it.skip('?maybe: sort nested array on first element (mimic array sort in:[5, 1, [2, 999], 4] out:[1,  [2, 999]...])', function() {
             oeq([...r5.sort()], arr3.sort())
         })
     })
