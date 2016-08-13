@@ -11,12 +11,12 @@ describe('Empty List', function() {
         it('should identify itself as empty', function(){
             eq(empty.done, true)
         })
-        it('should iterate zero times', function(){
+        it('should iterate (0 times)', function(){
             let counter = 0
             for(let i of empty) { counter++ }
             eq(counter, 0)
         })
-        it('should have one element with an undefined value', function(){
+        it('should contain an element of undefined value', function(){
             eq(empty.first, void(0))
         })
         it('should have an empty tail', function(){
@@ -50,7 +50,7 @@ describe('List', function() {
             neq(r, r2)
             neq(r, r3)
         })
-        it('should not be ephermal (be invisibly persistent)', function() {
+        it('should not be ephermal (be implicitly persistent)', function() {
             let i; naturals = (n=0) => (i = n+1)
             let r = retake.seq(naturals)
             eq(r.first,1)
@@ -66,14 +66,14 @@ describe('List', function() {
             eq(r.tail.first, r.tail.first)
             eq(r.tail.tail.first, r.tail.tail.first)
         })
-        it('should not pull an element from source more than once (memoized next)', function() {
+        it('should not repull an element from source (memoize next)', function() {
             let pulled = false, gen = function*() { while(!pulled) { pulled=true; yield 'a'; yield 'b'; } }
             let r = retake.from(gen)
             assert.ok(arrEq([...r], [...r]))
         })
     })
     describe('construction', function() {
-        it('should construct list provided first element of any type', function() {
+        it('should return list provided first element of any type', function() {
             let dummy = null, primitive = true, obj = {}
             let r = retake.fromValue(dummy)
             eq(r.first, dummy)
@@ -82,7 +82,7 @@ describe('List', function() {
             r = retake.fromValue(obj)
             eq(r.first, obj)
         })
-        it('should construct list provided first element and an iterable', function() {
+        it('should return list provided first element and an iterable', function() {
             let i = 0, gen = function*() { yield ++i }
             let r = retake.fromValue(i, gen)
             eq(r.first, 0)
@@ -90,7 +90,7 @@ describe('List', function() {
             eq(r.tail.first, i)
             neq(r.first, i)
         })
-        it('should construct list provided an iterable', function() {
+        it('should return list provided an iterable', function() {
             let naturalsGen = function*(n=0) { while(true) yield ++n; }
             let naturalsIterable = {
                 [Symbol.iterator]: (n=0) => ({ next: () => ({value: ++n}) })
@@ -100,7 +100,7 @@ describe('List', function() {
             eq(r.tail.first, r2.tail.first)
             eq(r.tail.tail.first, r2.tail.tail.first)
         })
-        it('should construct list provided an iterator', function() {
+        it('should return list provided an iterator', function() {
             let naturalsGen = function*(n=0) { while(true) yield ++n; }
             let naturalsIterable = {
                 [Symbol.iterator]: (n=0) => ({ next: () => ({value: ++n}) })
@@ -111,7 +111,7 @@ describe('List', function() {
             eq(r.tail.first, r2.tail.first)
             eq(r.tail.tail.first, r2.tail.tail.first)
         })
-        it('should be able to construct list given indefinite number of values', function() {
+        it('should be able to return list given indefinite number of values', function() {
             let naturals = (limit) => (function*(n=0) { while(n<limit) yield ++n; })()
             let r1 = retake.of(...naturals(1))
             let r3 = retake.of(...naturals(3)), r5 = retake.of(...naturals(5))
@@ -124,14 +124,14 @@ describe('List', function() {
             eq(r5.tail.tail.tail.tail.first, 5)
             eq(r5.tail.tail.tail.tail.tail.done, true)
         })
-        it('should construct list provided a sequence generating function', function() {
+        it('should return list provided a sequence generating function', function() {
             let multiples = (base) => (n=0) => n+base
             let r = retake.seq(multiples(5))
             eq(r.first, 5)
             eq(r.tail.first, 10)
             eq(r.tail.tail.first, 15)
         })
-        it('should be able to construct list in reverse order for a finite sequence', function() {
+        it('should be able to return list in reverse order for a finite sequence', function() {
             let naturals5 = function*(n=0) { while(n<5) yield ++n; }
             let r = retake.fromReversed(naturals5)
             eq(r.first, 5)
