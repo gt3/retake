@@ -1,4 +1,5 @@
-let assert = require('assert'), retake = require('../src/retake')
+let assert = require('assert')
+let retake = require('../src/retake'), {wrap, unwrap} = require('../src/utils')
 const empty = retake.empty, eq = assert.strictEqual, neq = assert.notStrictEqual
 const str = JSON.stringify
 const arrEq = (...arrs) => {
@@ -9,7 +10,7 @@ const arrEq = (...arrs) => {
 describe('Empty List', function() {
     describe('principles', function() {
         it('should identify itself as empty', function(){
-            eq(empty.done, true)
+            assert.ok(empty.done)
         })
         it('should iterate (0 times)', function(){
             let counter = 0
@@ -111,18 +112,19 @@ describe('List', function() {
             eq(r.tail.first, r2.tail.first)
             eq(r.tail.tail.first, r2.tail.tail.first)
         })
-        it('should be able to return list given indefinite number of values', function() {
+        it('should be able to return list given arbitrary number of values', function() {
             let naturals = (limit) => (function*(n=0) { while(n<limit) yield ++n; })()
-            let r1 = retake.of(...naturals(1))
+            let r0 = retake.of(), r1 = retake.of(...naturals(1))
             let r3 = retake.of(...naturals(3)), r5 = retake.of(...naturals(5))
+            assert.ok(r0.done)
             eq(r1.first, 1)
-            eq(r1.tail.done, true)
+            assert.ok(r1.tail.done)
             eq(r3.first, 1)
             eq(r3.tail.tail.first, 3)
-            eq(r3.tail.tail.tail.done, true)
+            assert.ok(r3.tail.tail.tail.done)
             eq(r5.first, 1)
             eq(r5.tail.tail.tail.tail.first, 5)
-            eq(r5.tail.tail.tail.tail.tail.done, true)
+            assert.ok(r5.tail.tail.tail.tail.tail.done)
         })
         it('should return list provided a sequence generating function', function() {
             let multiples = (base) => (n=0) => n+base
@@ -132,12 +134,36 @@ describe('List', function() {
             eq(r.tail.tail.first, 15)
         })
         it('should be able to return list in reverse order for a finite sequence', function() {
-            let naturals5 = function*(n=0) { while(n<5) yield ++n; }
-            let r = retake.fromReversed(naturals5)
+            let naturals = (limit) => (function*(n=0) { while(n<limit) yield ++n; })()
+            let r = retake.fromReversed(naturals(5))
             eq(r.first, 5)
             eq(r.tail.first, 4)
             eq(r.tail.tail.tail.tail.first, 1)
             eq(r.tail.tail.tail.tail.tail.done, true)
         })
+    })
+    describe('primary operations', function() {
+        it('should identify itself as lazy (type helper)', function() {
+            let e = retake.of(), r2 = retake.of(1)
+            assert.ok(e.lazy)
+            assert.ok(r2.lazy)
+        })
+        it('should be iterable (per protocol spec)', function() {
+            let arr = [1,2,3], r = retake.from(arr), e = retake.from([],[])
+            assert.ok(arrEq([...r], arr))
+            assert.ok(arrEq([...e], []))
+        })
+        it('should be able to return nodes in raw format', function() {
+            let arr = [1,2,3], r = retake.from(arr), rawOut = true;
+            const raw = [...r[Symbol.iterator](rawOut)]
+            assert.ok(!arrEq(raw, arr))
+            assert.ok(arrEq(raw, [...arr.map(wrap)]))
+        })
+        it('should call reducing function to reduce itself', function() {
+            let r = retake.of(1,2,3), add = (acc, node, next) => next ? next(acc+unwrap(node)) : acc
+            let sum = r.reduce(add, 0)
+            eq(sum, 6)
+        })
+
     })
 });
