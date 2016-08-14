@@ -8,4 +8,6 @@ const compareObjects = (...objs) => {
 const oeq = (o1, o2, ...args) => assert.ok.call(null, compareObjects(o1, o2), ...args)
 const oneq = (o1, o2, ...args) => assert.ok.call(null, !compareObjects(o1, o2), ...args)
 
-module.exports = {eq, neq, oeq, oneq}
+const random = (min=1, max=9) => Math.floor(Math.random() * (max - min + 1) + min)
+
+module.exports = {eq, neq, oeq, oneq, random}

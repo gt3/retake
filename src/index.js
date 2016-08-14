@@ -4,6 +4,6 @@ const zipperExtensions = require('./list-zipper/extensions')
 retake.extend(transformExtensions,zipperExtensions)
 
 const transforms = require('./transforms')
-const zipperActions = require('./zipper/action-templates')
+const zipperActions = require('./list-zipper/action-templates')
 
 module.exports = Object.assign(retake,{transforms},{zipperActions})

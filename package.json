@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha ./test/zipper.js",
     "lint": "eslint --ignore-path .gitignore src/**"
   },
   "repository": {

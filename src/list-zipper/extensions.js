@@ -1,2 +1,2 @@
-const Zipper = require('../zipper')
+const Zipper = require('./index')
 module.exports = {toZipper: Zipper.create}
