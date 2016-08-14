@@ -84,5 +84,12 @@ describe('Zipper', function() {
             eq(z3.focus, 3)
             oeq([...z3.list].slice(2), arr.slice(4))
         })
+        it('should load (append) new elements without modifying source', function() {
+            let z2 = z.unzip(10), z3 = z.load([101,102]).unzip(10)
+            eq(z2.focus, 9)
+            eq(z3.focus, 101)
+            eq(z3.unzip().focus, 102)
+            oeq([...z3.list].slice(0,9), arr)
+        })
     })
 });
