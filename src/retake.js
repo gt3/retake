@@ -39,6 +39,7 @@ List.prototype = {
 
 empty = new class extends List {
     get done() { return true }
+    size() { return 0 }
     next() { return this }
     [Symbol.iterator]() { return this }
 }

@@ -70,13 +70,13 @@ describe('Transforms', function() {
             invoke = Function.prototype.call.bind(Function.prototype.call)
             arr = [f, f, f, t, f, f]
             r = retake.from(arr)
-            function* tu(arr, pred) {
+            function* takeu(arr, pred) {
                 for(let v of arr) {
                     if(pred(v)) break;
                     yield v
                 }
             }
-            exp = [...tu(arr, invoke)]
+            exp = [...takeu(arr, invoke)]
         })
         it('as extension method', function() {
             oeq([...r.takeUntil(invoke)], exp)
@@ -133,6 +133,67 @@ describe('Transforms', function() {
         })
         it.skip('?maybe: sort nested array on first element (mimic array sort in:[5, 1, [2, 999], 4] out:[1,  [2, 999]...])', function() {
             oeq([...r5.sort()], arr3.sort())
+        })
+    })
+    describe('splitters', function() {
+        let r, invoke, arr, t = () => true, f = () => false, exp
+        before(function() {
+            //also tests if context is set correctly from callee (reduce)
+            invoke = Function.prototype.call.bind(Function.prototype.call)
+            arr = [f, f, f, t, f, f]
+            r = retake.from(arr)
+            function* takeu(arr, pred) {
+                for(let v of arr) {
+                    if(pred(v)) break;
+                    yield v
+                }
+            }
+            exp = [...takeu(arr, invoke)]
+        })
+        describe('splitWhen', function() {
+            it('as extension method', function() {
+                let [res1, res2] = r.splitWhen(invoke)
+                oeq([...res1], [...exp])
+                oeq([...res2], [t,f,f])
+            })
+            it('as transforming reducer', function() {
+                let [res1, res2] = r.reduce(splitWhen(invoke)(append))
+                oeq([...res1], [...exp])
+                oeq([...res2], [t,f,f])
+            })
+        })
+        describe('splitAt', function() {
+            it('as extension method', function() {
+                let [res1, res2] = r.splitAt(3)
+                oeq([...res1], [...exp])
+                oeq([...res2], [t,f,f])
+            })
+            it('as transforming reducer', function() {
+                let [res1, res2] = r.reduce(splitAt(3)(append))
+                oeq([...res1], [...exp])
+                oeq([...res2], [t,f,f])
+            })
+        })
+    })
+    describe('reverse', function() {
+        let r, arr
+        before(function() {
+            arr = [-1,0,1,2,3]
+            r = retake.from(arr)
+        })
+        it('should return elements in reverse order', function() {
+            oeq([...r.reverse()], arr.reverse())
+        })
+    })
+    describe('size', function() {
+        let r, r0, arr
+        before(function() {
+            arr = [-1,0,1,2,3]
+            r = retake.from(arr), r0 = retake.from([])
+        })
+        it('should return size of a finite list', function() {
+            eq(r.size(), arr.length)
+            eq(r0.size(), 0)
         })
     })
 });
