@@ -36,13 +36,13 @@ describe('List', function() {
             eq(r.tail.first, 2)
             eq(r.tail.tail.first, 3)
         })
-        it('should not evaluate eagerly (be lazy)', function() {
+        it('should evaluate source on demand (be lazy)', function() {
             let i = 0, gen = function*() { while(true) yield ++i; }
             let r = retake.fromValue(i, gen)
             eq(r.first, 0)
             eq(r.first, i)
         })
-        it('should not mutate itself (be immutable)', function() {
+        it('should not modify itself, instead create new versions to support updates (be immutable)', function() {
             let r = retake.from([1,2,3]), r2 = r.tail, r3= r.prepend(9)
             neq(r, r2)
             neq(r, r3)
@@ -122,7 +122,7 @@ describe('List', function() {
             eq(r5.tail.tail.tail.tail.first, 5)
             assert.ok(r5.tail.tail.tail.tail.tail.done)
         })
-        it('should return list provided a sequence generating function', function() {
+        it('should return list provided a continuation', function() {
             let multiples = (base) => (n=0) => n+base
             let r = retake.seq(multiples(5))
             eq(r.first, 5)
