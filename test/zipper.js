@@ -5,13 +5,17 @@ let retake = require('../src'), empty = retake.empty
 
 describe('Zipper', function() {
     describe.skip('principles', function() {
-        it('should evaluate source on demand (be lazy)', function() {
+        it('should be able to represent source list', function() {
+
         })
-        it('should not modify itself, instead create new versions to support updates (be immutable)', function() {
+        it('should preserve laziness of source list', function() {
+
         })
-        it('should provide paused computation to manage state efficiently', function() {
+        it('should allow list traversal without modifying itself or source list (be immutable)', function() {
+
         })
-        it('should be able to represent complete source', function() {
+        it('should allow updates without modifying itself or source list', function() {
+
         })
     })
     describe.skip('toZipper', function() {

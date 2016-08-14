@@ -12,8 +12,9 @@ describe('Empty List', function() {
             let counter = 0
             for(let i of empty) { counter++ }
             eq(counter, 0)
+            eq(empty.size, 0)
         })
-        it('should contain an element of undefined value', function() {
+        it('should return undefined value for head', function() {
             eq(empty.first, void(0))
         })
         it('should have an empty tail', function() {
