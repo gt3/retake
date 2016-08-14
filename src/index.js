@@ -1,6 +1,7 @@
 const retake = require('./retake')
 const transformExtensions = require('./transforms/extensions')
-retake.extend(transformExtensions)
+const zipperExtensions = require('./zipper/extensions')
+retake.extend(transformExtensions,zipperExtensions)
 
 const transforms = require('./transforms')
 const zipperActions = require('./zipper/action-templates')

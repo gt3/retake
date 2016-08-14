@@ -1,5 +1,4 @@
 const {identity} = require('../utils')
-const Zipper = require('../zipper')
 const {Reducers: {prepend, append, counter},
     Transformers: {map, filter, take, skip, takeUntil, flatten, sort},
     Splitters: {splitWhen, splitAt}} = require('./index')
@@ -20,6 +19,5 @@ module.exports = {
     splitWhen: toExtension(splitWhen),
     splitAt: toExtension(splitAt),
     reverse: reducerExtension(prepend),
-    size: reducerExtension(counter, 0),
-    toZipper: Zipper.create
+    size: reducerExtension(counter, 0)
 }
