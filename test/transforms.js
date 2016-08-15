@@ -2,7 +2,10 @@ let assert = require('assert')
 let {eq, neq, oeq, oneq} = require('./helpers')
 let {identity} = require('../src/utils')
 let retake = require('../src'), empty = retake.empty
-const {Reducers: {prepend, append, counter}, Transformers: {sort,map,filter,take,skip,takeUntil,flatten}, Splitters: {splitAt,splitWhen}} = retake.transforms
+const {Reducers: {prepend, append, counter}, 
+        Transformers: {sort,map,filter,take,skip,takeUntil,flatten}, 
+            Splitters: {splitAt,splitWhen},
+                reduce, composeT, pipeT} = retake.transforms
 
 describe('Transforms', function() {
     describe('map', function() {
@@ -194,6 +197,27 @@ describe('Transforms', function() {
         it('should return size of a finite list', function() {
             eq(r.size(), arr.length)
             eq(r0.size(), 0)
+        })
+    })
+    describe('reduce', function() {
+        let r, r0, arr
+        before(function() {
+            arr = [1,2,3,4,5,6,7,8,9]
+            r = retake.from(arr), r0 = retake.from([])
+        })
+        describe('composeT', function() {
+            it('should compose transforms and have reduce apply default reducer if not provided', function() {
+                let composedT = composeT(take(5), skip(2))
+                let r3 = reduce(composedT)(r)
+                oeq([...r3], arr.slice(2, 7))
+            })
+        })
+        describe('pipeT', function() {
+            it('should pipe transforms and have reduce apply default reducer if not provided', function() {
+                let pipedT = pipeT(skip(2), take(5))
+                let r3 = reduce(pipedT)(r)
+                oeq([...r3], arr.slice(2, 7))
+            })
         })
     })
 });
