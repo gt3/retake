@@ -61,4 +61,18 @@ class Splitters {
     }
 }
 
-module.exports = {Transformers, Splitters, Reducers}
+const reduce = (fn, init) => (list) => list.reduce(fn && fn.applyReducer ? fn() : fn, init)
+
+const compose = (...fns) => {
+    const partialCompose = (reducer = Reducers.append) => fns.reduce((acc, fn) => fn(acc), reducer)
+    partialCompose.applyReducer = true
+    return partialCompose
+}
+
+const pipe = (...fns) => {
+    const partialCompose = (reducer = Reducers.append) => fns.reduceRight((acc, fn) => fn(acc), reducer)
+    partialCompose.applyReducer = true
+    return partialCompose
+}
+
+module.exports = {Transformers, Splitters, Reducers, reduce, composeT: compose, pipeT: pipe}

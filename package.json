@@ -8,8 +8,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "pretest": "eslint --ignore-path .gitignore src/**",
+    "test": "mocha",
+    "lint": "eslint --ignore-path .gitignore src/**",
     "build": "webpack & webpack --env.transpile-compress",
     "publish-built": "npm publish --tag built"
   },

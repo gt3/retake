@@ -4,7 +4,7 @@ const {Reducers: {prepend,append}, Splitters: {splitAt}} = require('../transform
 class ZipperTarget {
     constructor(target) { this._target = target }
     get focus() { return this._target.first }
-    get size() { return this._target.size() }
+    size() { return this._target.size() }
     get resultList() { return this._target.reverse() }
     get list() { return this._target }
     [Symbol.iterator](...args) { return this.resultList[Symbol.iterator](...args) }

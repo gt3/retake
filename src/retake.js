@@ -4,7 +4,7 @@ const {pullNext, pullReversed, linkIterables, sequenceYielder} = Utils.iteratorU
 const {extend} = Utils.prototypeUtils
 let empty
 
-function List(head = wrap(), getNext) {
+function List(head = wrap(), getNext = () => empty) {
     Object.assign(this, { head, getNext })
 }
 
@@ -39,6 +39,7 @@ List.prototype = {
 
 empty = new class extends List {
     get done() { return true }
+    size() { return 0 }
     next() { return this }
     [Symbol.iterator]() { return this }
 }
