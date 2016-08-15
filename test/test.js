@@ -1,7 +1,7 @@
 const retake = require('../src')
 const {Reducers: {prepend, append, counter}, Transformers: {sort,map,filter,take,skip,takeUntil,flatten}, Splitters: {splitAt}} = retake.transforms
-let l = retake.of(1,2,3,4,5,6,7,8,9)
-/*console.log('-----')
+let r = retake.of(1,2,3,4,5,6,7,8,9)
+console.log('-----')
 for(let i of r) {  console.log('%j',i); }
 console.log('-----')
 r = r.skip(2).take(5).reverse().sort()
@@ -16,9 +16,9 @@ console.log('-----')
 console.log(z.focus)
 console.log('-----')
 r = r.append(8,9)
-for(let i of r) {  console.log('%j',i); }*/
+for(let i of r) {  console.log('%j',i); }
 
- console.log('Zipper ***********')
+/* console.log('Zipper ***********')
 let r = l.toZipper()
 r = r.unzip(3).unzip(2).zip(3).unzip(2)
 console.log('size:',r.size)
@@ -60,4 +60,4 @@ console.log('Zipper Load ***********')
 r = r.load([101,102])
 console.log('Focus: %j',r.focus)
 console.log('*** .list ****')
-for(let i of r.list) { console.log('%j',i); }
+for(let i of r.list) { console.log('%j',i); }*/
