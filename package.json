@@ -28,7 +28,7 @@
     "eslint": "^3.2.2",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.0.1",
-    "webpack": "^1.13.1"
+    "webpack": "^2.1.0-beta.20"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6"
