@@ -3,12 +3,6 @@ Retake
 
 Pragmatic data structure and algorithmic transformations for modern Javascript apps.
 
-Primary goal of Retake is to shift complexity from code to data. This implementation covers 3 important facets:
-
-  - Lazy List - provides an immutable persistent collection to organize data linearly using head/tail decomposition with lazy evaluation. *Retake* is always free.
-  - Transforms - provide an integrated way to compose and apply algorithmic transformations to data structures.
-  - List Zipper - facilitates efficient traversal and updates to linear sequential data.
-
 
 ## Installation
 
@@ -34,15 +28,31 @@ Required runtime support for ES6 built-ins:
 ## Motivation
 
 ECMAScript, the language, lacks built-in support for advanced data structures. 
-Arrays and Objects in Javascript are highly efficient and easy to operate on. 
-However they are too basic and might not serve well in managing app-level complexity. 
-This is specially true for web apps (React, Redux, Flux) where UI needs to stay in sync with constantly updating app-state (data).
+Arrays and Objects in Javascript are highly efficient and provide a flexible API. 
+However their primitive purpose does not extend well in design of application domain models. 
+This is specially true for web apps (React, Redux, Flux) where UIs can be described as a function of application state.
 
-ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols) that enable expressing functional concepts more succintly.
+ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols) that enable functional concepts to be expressed more succinctly. 
+As a result, we've benefited from libraries such as Immutable.js and Mori that offer an assortment of fully persistent data structures.
 
-Immutable.js and Mori.js are full-fledged libraries that support a variety of immutable data structures to solve this very problem.
 
-Retake is a more focused, lightweight solution to manage a *collection of any data* your app cares about at any given time. Complexity of persistence and transformations is isolated from your app into the data structure.
+## Introduction
 
-It offers immutability for your data with a friendly API. 
-It has integrated support for algorithmic transformations (see [transducers](https://www.youtube.com/watch?v=6mTbuzafcII)) and List Zippers.
+Retake is a more focused, refined solution to managing *pieces of data* your app cares about at any given time. 
+It comprises of a Lazy List implementation and auxiliary functions to allow efficient traversal and updates. It aims to offer practical solutions to most common challenges faced by Javascript developers in data handling. 
+The overhead of persistence and transformations is isolated from your app logic.
+
+This implementation covers 3 important facets:
+
+  - Lazy List - provides an immutable persistent collection to organize data linearly using head/tail decomposition with lazy evaluation. *Retake* is always free.
+  - Transforms - provide an integrated way to compose and apply algorithmic transformations to data structures.
+  - List Zipper - facilitates efficient traversal and updates to encompassing linear data structure.
+
+That's very much the gist of it! Refer to implementation details to learn the inner workings.
+
+Prerequisite readings:
+- [Persistent Data Structure](https://en.wikipedia.org/wiki/Persistent_data_structure)
+- [Transducers](https://www.youtube.com/watch?v=6mTbuzafcII) by Rich Hickey
+- [Zipper](https://en.wikipedia.org/wiki/Zipper_(data_structure) by Gérard Huet
+
+##
