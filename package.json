@@ -12,8 +12,7 @@
     "cover": "node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha",
     "lint": "eslint --ignore-path .gitignore src/**",
     "build": "webpack && npm run babel && webpack --env.compress",
-    "babel": "babel --sourcemaps=true --minified ./lib/retake.js --out-file ./lib/retake.es5.js",
-    "publish-built": "npm publish --tag built"
+    "babel": "babel --sourcemaps=true --minified ./lib/retake.js --out-file ./lib/retake.es5.js"
   },
   "repository": {
     "type": "git",
