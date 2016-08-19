@@ -3,15 +3,30 @@ const {Reducers: {prepend, append, counter}, Transformers: {sort,map,filter,take
 
 //1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
 
+const base = retake.of(1)
+
 function look_and_say(l, acc=empty) {
     if(l.done) return acc
-    let first = l.first, count = 0
-    let split = l.splitWhen(v => !(first === v && ++count))
-    acc = acc.append(count, first)
+    let target = l.first, count = 0
+    let split = l.splitWhen(v => !(target === v && ++count))
+    acc = acc.append(count, target)
     return look_and_say(split.tail.first, acc)
 }
-let seq = retake.seq(l => l ? look_and_say(l) : retake.of(1))
-for(let e of seq.take(8)) console.log(...e)
+let seq = retake.seq(l => l ? look_and_say(l) : base)
+for(let e of seq.take(12)) console.log(...e)
+console.log('----------')
+
+function look_and_say_zipper(z) {
+    z = z.unzip()
+    if(z.focus === void(0)) return z.list.flatten()
+    let target = z.focus, count = 1
+    while(target === (z = z.unzip()).focus) { z = z.remove(); ++count; }
+    z = z.zip().update([count,target])
+    return look_and_say_zipper(z)
+}
+const look_and_say2 = l => look_and_say_zipper(l.toZipper())
+let seq2 = retake.seq(l => l ? look_and_say2(l) : base)
+for(let e of seq2.take(12)) console.log(...e)
 
 /*console.log('-----')
 for(let i of r) {  console.log('%j',i); }
