@@ -3,17 +3,15 @@ const {Reducers: {prepend, append, counter}, Transformers: {sort,map,filter,take
 
 //1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
 
-function build(l, acc=empty) {
+function look_and_say(l, acc=empty) {
     if(l.done) return acc
     let first = l.first, count = 0
     let split = l.splitWhen(v => !(first === v && ++count))
-    //console.log(count, first, 'split')
     acc = acc.append(count, first)
-    //console.log(...acc)
-    return build(split.tail.first, acc)
+    return look_and_say(split.tail.first, acc)
 }
-let l = retake.seq((l = retake.of(1)) => build(l))
-console.log(...l.take(5).flatten())
+let seq = retake.seq(l => l ? look_and_say(l) : retake.of(1))
+for(let e of seq.take(8)) console.log(...e)
 
 /*console.log('-----')
 for(let i of r) {  console.log('%j',i); }
