@@ -5,8 +5,6 @@ Pragmatic data structure and algorithmic transformations for modern Javascript a
 
 
 ## Installation
-
-
 ```
 npm install retake
 ```
@@ -19,10 +17,10 @@ npm install retake
 let retake = require('retake')
 ```
 
-- Browser (gzips to *~5k*)
+- Browser
 
 ```
-// es6
+// es6 (gzips to ~5k)
 <script src="./node_modules/retake/lib/retake.js"></script>
 
 // transpiled
@@ -66,7 +64,7 @@ This implementation covers 3 important facets:
   - Transforms - provide an integrated way to compose and apply algorithmic transformations to data structures.
   - List Zipper - facilitates efficient traversal and updates to encompassing linear data structure.
 
-That's very much the gist of it! Checkout the code examples below.
+That's very much the gist of it! Try code examples below.
 
 By the way, it should be clear that list-based structures are primarily purposed for sequential access unlike Vectors that are index-based.
 
@@ -113,7 +111,20 @@ const look_and_say = l => look_and_say_zipper(l.toZipper())
 
 look_and_say(retake.of(1,2,1,1)) //1,1,1,2,2,1
 ```
-Now we can make this into a lazy sequence and pull elements as needed.
+
+Both versions (a, b) of look_and_say function reduce the list recursively, while tracking and recording occurence of each element. 
+
+In a) occurence of an element and its value is appended to an accumulator, which becomes the result as the list is completely reduced. 
+Using the *splitWhen* transform, we get occurence and list of remaining elements.
+
+In b) first occurence of element is replaced by an array of [count, value], whereas consequent occurences are removed. 
+In the end, *flatten* tranform pulls count and sticks it as an element that precedes the actual value. 
+Note how the list is probed with *unzip/zip* Zipper transforms.
+
+
+Both techniques show the power of using immutable values in composing and decomposing data.
+
+Now we can form a sequence and consume lazily.
 
 ```Javascript
 const base = retake.of(1)
@@ -121,3 +132,13 @@ let seq = retake.seq(l => l ? look_and_say(l) : base)
 for(let e of seq.take(12)) console.log(...e)
 //1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
 ```
+
+## Docmentation
+
+API documentation will be available soon. In the meantime try out the test suite.
+
+## Credits
+
+- Rich Hickey for Transducers
+- Gérard Huet for Zippers
+
