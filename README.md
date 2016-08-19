@@ -17,10 +17,10 @@ npm install retake
 let retake = require('retake')
 ```
 
-- Browser
+- Browser (gzips to *~5k*)
 
 ```
-// es6 (gzips to ~5k)
+// es6
 <script src="./node_modules/retake/lib/retake.js"></script>
 
 // transpiled
@@ -97,7 +97,7 @@ function look_and_say(l, acc=empty) {
 look_and_say(retake.of(1,2,1,1)) //1,1,1,2,2,1
 ```
 
-### b. Using List Zipper
+### b. Using Zipper Transforms on List
 ```Javascript
 function look_and_say_zipper(z) {
     z = z.unzip()
@@ -118,7 +118,7 @@ In a) occurence of an element and its value is appended to an accumulator, which
 Using the *splitWhen* transform, we get occurence and list of remaining elements.
 
 In b) first occurence of element is replaced by an array of [count, value], whereas consequent occurences are removed. 
-In the end, *flatten* tranform pulls count and sticks it as an element that precedes the actual value. 
+In the end, the *flatten* tranform, pulls count and sticks it as an element that precedes the actual value. 
 Note how the list is probed with *unzip/zip* Zipper transforms.
 
 
@@ -135,9 +135,9 @@ for(let e of seq.take(12)) console.log(...e)
 
 ## Docmentation
 
-API documentation will be available soon. In the meantime try out the test suite.
+API documentation will be available soon. Try out the test suite for more thorough examples.
 
-## Credits
+## Research Credits
 
 - Rich Hickey for Transducers
 - Gérard Huet for Zippers
