@@ -48,16 +48,17 @@ let retake = require('retake')
 ECMAScript, the language, lacks built-in support for advanced data structures. 
 Arrays and Objects in Javascript are highly efficient and provide a flexible API. 
 However their mutative surface area does not serve well in design of concurrent systems. 
-This is specially true for web apps (React, Redux, Flux) where UIs can be described as a function of application state in a constant fold of events.
+This is specially true for web apps (React, Flux, Redux et al.) where UIs can be described as a function of application state in a constant fold of events. 
+Referential transparency is imperative, hence the demand for functional data structures.
 
-ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols, TCO) that 
+ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols, proper tail calls) that 
 improve performance and offer great flexibility in representing computations. 
 As a result, we've benefited from libraries such as Immutable.js and Mori that offer an assortment of fully persistent data structures.
 
-Retake takes a more focused, refined approach to managing *pieces of data* your app cares about at any given time. 
-It comprises of a Lazy List implementation and auxiliary functions to allow efficient traversal and updates. 
-It aims to offer practical solutions to most common challenges faced by Javascript developers in data handling by providing a simpler OO interface to functional data structures. 
-As a result, the overhead of persistence and transformations is isolated from app logic leading to less procedural code.
+Retake takes a more pragmatic, refined approach in managing *pieces of data* your app cares about *at any given time*.
+It is comprised of List, Zipper, and Transforms that enable proper organization of data for efficient traversal and updates. 
+These functional concepts are implemented and exposed in a way to meet requirements of modern Javascript apps. 
+The end goal is to free app domain of procedural code by isolating the overhead of persistence and retrieval.
 
 This implementation covers 3 important facets:
 
@@ -71,14 +72,52 @@ By the way, it should be clear that list-based structures are primarily purposed
 
 Helpful readings:
 - [Persistent Data Structure](https://en.wikipedia.org/wiki/Persistent_data_structure)
-- [Transducers](https://www.youtube.com/watch?v=6mTbuzafcII) by Rich Hickey
-- [Zipper](https://en.wikipedia.org/wiki/Zipper_(data_structure) by Gérard Huet
+- [Transducers](http://clojure.org/reference/transducers) by Rich Hickey
+- [Zipper](https://en.wikipedia.org/wiki/Zipper_(data_structure)) by Gérard Huet
 
 
 ## Code Examples
 
-### State is a fold of events
+### Look-and-say numbers
+
+Watch this [video](https://youtu.be/ea7lJkEhytA?list=PLt5AfwLFPxWIL8XA1npoNAHseS-j1y-7V) by John Conway for an introduction to this sequence.
+
+Let's first implement a function that produces the "look and say" (next element in sequence).
+
+### a. Using Transforms on List
+```Javascript
+//1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
+
+function look_and_say(l, acc=empty) {
+    if(l.done) return acc
+    let target = l.first, count = 0
+    let split = l.splitWhen(v => !(target === v && ++count))
+    acc = acc.append(count, target)
+    return look_and_say(split.tail.first, acc)
+}
+
+look_and_say(retake.of(1,2,1,1)) //1,1,1,2,2,1
 ```
-let multiples = (base) => (n=0) => n+base
-let times5 = retake.seq(multiples(5))
+
+### b. Using List Zipper
+```Javascript
+function look_and_say_zipper(z) {
+    z = z.unzip()
+    if(z.focus === void(0)) return z.list.flatten()
+    let target = z.focus, count = 1
+    while(target === (z = z.unzip()).focus) { z = z.remove(); ++count; }
+    z = z.zip().update([count,target])
+    return look_and_say_zipper(z)
+}
+const look_and_say = l => look_and_say_zipper(l.toZipper())
+
+look_and_say(retake.of(1,2,1,1)) //1,1,1,2,2,1
+```
+Now we can make this into a lazy sequence and pull elements as needed.
+
+```Javascript
+const base = retake.of(1)
+let seq = retake.seq(l => l ? look_and_say(l) : base)
+for(let e of seq.take(12)) console.log(...e)
+//1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
 ```
