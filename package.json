@@ -1,6 +1,6 @@
 {
   "name": "retake",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Retake on classic list and zipper data structures.",
   "main": "./src/index.js",
   "directories": {
