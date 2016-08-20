@@ -47,7 +47,7 @@ ECMAScript, the language, lacks built-in support for advanced data structures.
 Arrays and Objects in JavaScript are highly efficient and provide a flexible API. 
 However their mutative surface area does not serve well in design of concurrent systems. 
 This is especially true for web apps (React, Flux, Redux et al.) where UIs can be described as a function of application state in a constant fold of events. 
-Functional data structures are key to achieving referential transparency.
+Use of functional data structures is key to achieve referential transparency in such scenarios.
 
 ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols, proper tail calls) that improve performance and offer great flexibility in representing computations. 
 As a result, we've benefited from libraries such as Immutable.js and Mori that offer an assortment of fully persistent data structures.
