@@ -1,12 +1,12 @@
 Retake
 =========================
 
-Pragmatic data structure and algorithmic transformations for modern Javascript apps.
+Pragmatic data structure and algorithmic transformations for modern JavaScript apps.
 
 
 ## Installation
 ```
-npm install retake
+npm install --save retake
 ```
 
 ## Usage
@@ -44,23 +44,22 @@ let retake = require('retake')
 ## Introduction
 
 ECMAScript, the language, lacks built-in support for advanced data structures. 
-Arrays and Objects in Javascript are highly efficient and provide a flexible API. 
+Arrays and Objects in JavaScript are highly efficient and provide a flexible API. 
 However their mutative surface area does not serve well in design of concurrent systems. 
-This is specially true for web apps (React, Flux, Redux et al.) where UIs can be described as a function of application state in a constant fold of events. 
-Referential transparency is imperative, hence the demand for functional data structures.
+This is especially true for web apps (React, Flux, Redux et al.) where UIs can be described as a function of application state in a constant fold of events. 
+Functional data structures are key to achieving referential transparency.
 
-ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols, proper tail calls) that 
-improve performance and offer great flexibility in representing computations. 
+ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols, proper tail calls) that improve performance and offer great flexibility in representing computations. 
 As a result, we've benefited from libraries such as Immutable.js and Mori that offer an assortment of fully persistent data structures.
 
 Retake takes a more pragmatic, refined approach in managing *pieces of data* your app cares about *at any given time*.
 It is comprised of List, Zipper, and Transforms that enable proper organization of data for efficient traversal and updates. 
-These functional concepts are implemented and exposed in a way to meet requirements of modern Javascript apps. 
+These functional concepts are implemented and exposed in a way to meet requirements of modern JavaScript apps. 
 The end goal is to free app domain of procedural code by isolating the overhead of persistence and retrieval.
 
 This implementation covers 3 important facets:
 
-  - Lazy List - provides an immutable persistent collection to organize data linearly using head/tail decomposition with lazy evaluation. *Retake* is always free.
+  - Lazy List - provides an immutable persistent collection to organize data linearly using head/tail decomposition with lazy evaluation.
   - Transforms - provide an integrated way to compose and apply algorithmic transformations to data structures.
   - List Zipper - facilitates efficient traversal and updates to encompassing linear data structure.
 
@@ -116,15 +115,14 @@ look_and_say(retake.of(1,2,1,1)) // 1,1,1,2,2,1
 
 Both versions (a, b) of look_and_say function reduce the list recursively, while tracking and recording occurence of each element. 
 
-In a) occurence of an element and its value is appended to an accumulator, which becomes the result as the list is completely reduced. 
-Using the *splitWhen* transform, we get occurence and list of remaining elements.
+In a) occurrence of an element and its value is appended to an accumulator, which becomes the result as the list is completely reduced. 
+Using the *splitWhen* transform, we get occurrence and list of remaining elements.
 
-In b) first occurence of element is replaced by an array of [count, value], whereas consequent occurences are removed. 
-In the end, the *flatten* tranform, pulls count and sticks it as an element that precedes the actual value. 
+In b) first occurrence of element is replaced by an array of [count, value], whereas consequent occurrences are removed. 
+In the end, the *flatten* transform, pulls count and sticks it as an element that precedes the actual value. 
 Note how the list is probed with *unzip/zip* Zipper transforms.
 
-
-Both techniques show the power of using immutable values in (de)composing data.
+Both techniques show the power of using immutable values to (de)compose data.
 
 Now we can form a sequence and consume lazily.
 
@@ -136,12 +134,15 @@ for(let e of seq.take(12)) console.log(...e)
 //1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
 ```
 
-## Docmentation
+## Documentation
 
 API documentation will be available soon. Try out the test suite for more thorough examples.
 
 ## Research Credits
 
 - Rich Hickey for Transducers
-- Gérard Huet for Zippers
+- Gérard Huet for Zipper
 
+## License
+
+MIT
