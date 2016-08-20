@@ -1,58 +1,148 @@
 Retake
 =========================
 
-Pragmatic data structure and algorithmic transformations for modern Javascript apps.
+Pragmatic data structure and algorithmic transformations for modern JavaScript apps.
 
 
 ## Installation
-
-
-- Node.js (v6.0.0)
-
 ```
 npm install --save retake
 ```
 
-- Transpiled, pre-built
+## Usage
+
+- Node (6 or later)
 
 ```
-npm install --save retake@built
+let retake = require('retake')
 ```
 
-Required runtime support for ES6 built-ins:
-    
-- [`Generators`](https://babeljs.io/docs/plugins/transform-regenerator)
-- [`Object.assign`](http://babeljs.io/docs/plugins/transform-object-assign)
+- Browser (gzips to *~5k*)
 
+```Javascript
+// es6
+<script src="./node_modules/retake/lib/retake.js"></script>
 
-## Motivation
+// transpiled
+<script src="./node_modules/retake/lib/retake.es5.js"></script>
 
-ECMAScript, the language, lacks built-in support for advanced data structures. 
-Arrays and Objects in Javascript are highly efficient and provide a flexible API. 
-However their primitive purpose does not extend well in design of application domain models. 
-This is specially true for web apps (React, Redux, Flux) where UIs can be described as a function of application state.
+// minified
+<script src="./node_modules/retake/lib/retake.es5.min.js"></script>
 
-ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols) that enable functional concepts to be expressed more succinctly. 
-As a result, we've benefited from libraries such as Immutable.js and Mori that offer an assortment of fully persistent data structures.
+// retake...
+
+```
+
+- For es5 versions - use [Babel polyfill](https://babeljs.io/docs/usage/polyfill/)
+
+```Javascript
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.13.0/polyfill.min.js">
+</script>
+```
 
 
 ## Introduction
 
-Retake is a more focused, refined solution to managing *pieces of data* your app cares about at any given time. 
-It comprises of a Lazy List implementation and auxiliary functions to allow efficient traversal and updates. It aims to offer practical solutions to most common challenges faced by Javascript developers in data handling. 
-The overhead of persistence and transformations is isolated from your app logic.
+ECMAScript, the language, lacks built-in support for advanced data structures. 
+Arrays and Objects in JavaScript are highly efficient and provide a flexible API. 
+However their mutative surface area does not serve well in design of concurrent systems. 
+This is especially true for web apps (React, Flux, Redux et al.) where UIs can be described as a function of application state in a constant fold of events. 
+Functional data structures are key to achieving referential transparency.
+
+ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols, proper tail calls) that improve performance and offer great flexibility in representing computations. 
+As a result, we've benefited from libraries such as Immutable.js and Mori that offer an assortment of fully persistent data structures.
+
+Retake takes a more pragmatic, refined approach in managing *pieces of data* your app cares about *at any given time*.
+It is comprised of List, Zipper, and Transforms that enable proper organization of data for efficient traversal and updates. 
+These functional concepts are implemented and exposed in a way to meet requirements of modern JavaScript apps. 
+The end goal is to free app domain of procedural code by isolating the overhead of persistence and retrieval.
 
 This implementation covers 3 important facets:
 
-  - Lazy List - provides an immutable persistent collection to organize data linearly using head/tail decomposition with lazy evaluation. *Retake* is always free.
+  - Lazy List - provides an immutable persistent collection to organize data linearly using head/tail decomposition with lazy evaluation.
   - Transforms - provide an integrated way to compose and apply algorithmic transformations to data structures.
   - List Zipper - facilitates efficient traversal and updates to encompassing linear data structure.
 
-That's very much the gist of it! Refer to implementation details to learn the inner workings.
+That's very much the gist of it! Try code examples below.
 
-Prerequisite readings:
+By the way, it should be clear that list-based structures are primarily purposed for sequential access unlike Vectors that are index-based.
+
+Helpful readings:
 - [Persistent Data Structure](https://en.wikipedia.org/wiki/Persistent_data_structure)
-- [Transducers](https://www.youtube.com/watch?v=6mTbuzafcII) by Rich Hickey
-- [Zipper](https://en.wikipedia.org/wiki/Zipper_(data_structure) by Gérard Huet
+- [Transducers](http://clojure.org/reference/transducers) by Rich Hickey
+- [Zipper](https://en.wikipedia.org/wiki/Zipper_(data_structure)) by Gérard Huet
 
-##
+
+## Code Examples
+
+### Look-and-say numbers
+
+Watch this [video](https://youtu.be/ea7lJkEhytA?list=PLt5AfwLFPxWIL8XA1npoNAHseS-j1y-7V) by John Conway for an introduction to this sequence.
+
+Let's first implement a function that produces the "look and say" (next element in sequence).
+
+### a. Using Transforms on List
+```Javascript
+function look_and_say(l, acc=empty) {
+    if(l.done) return acc
+    let focus = l.first, count = 0
+    let split = l.splitWhen(v => !(focus === v && ++count))
+    acc = acc.append(count, focus)
+    return look_and_say(split.tail.first, acc)
+}
+```
+
+### b. Using Zipper Transforms on List
+```Javascript
+function look_and_say_zipper(z) {
+    z = z.unzip()
+    if(z.focus === void(0)) return z.list.flatten()
+    let focus = z.focus, count = 1
+    while(focus === (z = z.unzip()).focus) { z = z.remove(); ++count; }
+    z = z.zip().update([count,focus])
+    return look_and_say_zipper(z)
+}
+const look_and_say = l => look_and_say_zipper(l.toZipper())
+```
+
+and execute...
+```Javascript
+// 1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
+
+look_and_say(retake.of(2,1)) // 1,2,1,1
+look_and_say(retake.of(1,2,1,1)) // 1,1,1,2,2,1
+```
+
+Both versions (a, b) of look_and_say function reduce the list recursively, while tracking and recording occurence of each element. 
+
+In a) occurrence of an element and its value is appended to an accumulator, which becomes the result as the list is completely reduced. 
+Using the *splitWhen* transform, we get occurrence and list of remaining elements.
+
+In b) first occurrence of element is replaced by an array of [count, value], whereas consequent occurrences are removed. 
+In the end, the *flatten* transform, pulls count and sticks it as an element that precedes the actual value. 
+Note how the list is probed with *unzip/zip* Zipper transforms.
+
+Both techniques show the power of using immutable values to (de)compose data.
+
+Now we can form a sequence and consume lazily.
+
+```Javascript
+const base = retake.of(1)
+let seq = retake.seq(l => l ? look_and_say(l) : base)
+
+for(let e of seq.take(12)) console.log(...e)
+//1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
+```
+
+## Documentation
+
+API documentation will be available soon. Try out the test suite for more thorough examples.
+
+## Research Credits
+
+- Rich Hickey for Transducers
+- Gérard Huet for Zipper
+
+## License
+
+MIT
