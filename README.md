@@ -17,7 +17,7 @@ npm install --save retake
 let retake = require('retake')
 ```
 
-- Browser (gzips to *~5k*)
+- Browser (gzips to ~5k)
 
 ```Javascript
 // es6
@@ -39,7 +39,6 @@ let retake = require('retake')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.13.0/polyfill.min.js">
 </script>
 ```
-
 
 ## Introduction
 
@@ -75,13 +74,49 @@ Helpful readings:
 
 ## Code Examples
 
-### Look-and-say numbers
+### 1. Transducers
+
+```Javascript
+let list = retake.of('react','om','angular','backbone','ember','knockout','meteor','vue','derby')
+```
+Let's transform this list.
+
+a) Compose transforms directly
+```Javascript
+let t = filter(v => v.indexOf('r') > -1)(sort()(skip(1)(append)))
+```
+
+b) Use helper to compose transforms
+```Javascript
+let t = pipeT(filter(v => v.indexOf('r') > -1), sort(), skip(1))
+// or
+let t = composeT(skip(1), sort(), filter(v => v.indexOf('r') > -1))
+```
+
+Finally reduce over the list passing in the transducing function.
+```Javascript
+let result = reduce(t)(list)
+console.log(...result) // derby ember meteor react
+
+```
+
+Chaining on objects...
+```Javascript
+//might be tempting
+let result = list.filter(hasR).sort().skip(1)
+console.log(...result) // derby ember meteor react
+
+// _not_ recommended, read more on transducers to understand why
+```
+
+
+### 2. Look-and-say numbers
 
 Watch this [video](https://youtu.be/ea7lJkEhytA?list=PLt5AfwLFPxWIL8XA1npoNAHseS-j1y-7V) by John Conway for an introduction to this sequence.
 
 Let's first implement a function that produces the "look and say" (next element in sequence).
 
-### a. Using Transforms on List
+a) Using Transforms on List
 ```Javascript
 function look_and_say(l, acc=empty) {
     if(l.done) return acc
@@ -92,7 +127,7 @@ function look_and_say(l, acc=empty) {
 }
 ```
 
-### b. Using Zipper Transforms on List
+b) Using Zipper Transforms on List
 ```Javascript
 function look_and_say_zipper(z) {
     z = z.unzip()
