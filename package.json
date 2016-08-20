@@ -1,7 +1,7 @@
 {
   "name": "retake",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Retake on classic list and zipper data structures.",
   "main": "./lib/retake.js",
   "directories": {
     "doc": "doc",
@@ -14,11 +14,27 @@
     "build": "webpack && npm run babel && webpack --env.compress",
     "babel": "babel --sourcemaps=true --minified ./lib/retake.js --out-file ./lib/retake.es5.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "file:///C:\\\\Users\\\\Ankit\\\\OneDrive for Business\\\\Code\\\\retake"
-  },
-  "author": "",
+  "repository": "gt3/retake",
+  "author": "Ankit Patel <gt3.someday@gmail.com>",
+  "keywords": [
+    "immutable",
+    "persistent",
+    "lazy",
+    "data",
+    "datastructure",
+    "zipper",
+    "transducer",
+    "functional",
+    "collection",
+    "linked",
+    "list",
+    "sequence",
+    "iterator",
+    "iterable",
+    "generator",
+    "transform",
+    "util"
+  ],
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.11.4",
