@@ -28,6 +28,7 @@ const look_and_say2 = l => look_and_say_zipper(l.toZipper())
 let seq2 = retake.seq(l => l ? look_and_say2(l) : base)
 for(let e of seq2.take(12)) console.log(...e)
 
+
 /*console.log('-----')
 for(let i of r) {  console.log('%j',i); }
 console.log('-----')

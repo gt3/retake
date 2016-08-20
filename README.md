@@ -19,7 +19,7 @@ let retake = require('retake')
 
 - Browser (gzips to *~5k*)
 
-```
+```Javascript
 // es6
 <script src="./node_modules/retake/lib/retake.js"></script>
 
@@ -35,7 +35,7 @@ let retake = require('retake')
 
 - For es5 versions - use [Babel polyfill](https://babeljs.io/docs/usage/polyfill/)
 
-```
+```Javascript
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.13.0/polyfill.min.js">
 </script>
 ```
@@ -84,17 +84,13 @@ Let's first implement a function that produces the "look and say" (next element 
 
 ### a. Using Transforms on List
 ```Javascript
-//1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
-
 function look_and_say(l, acc=empty) {
     if(l.done) return acc
-    let target = l.first, count = 0
-    let split = l.splitWhen(v => !(target === v && ++count))
-    acc = acc.append(count, target)
+    let focus = l.first, count = 0
+    let split = l.splitWhen(v => !(focus === v && ++count))
+    acc = acc.append(count, focus)
     return look_and_say(split.tail.first, acc)
 }
-
-look_and_say(retake.of(1,2,1,1)) //1,1,1,2,2,1
 ```
 
 ### b. Using Zipper Transforms on List
@@ -102,14 +98,20 @@ look_and_say(retake.of(1,2,1,1)) //1,1,1,2,2,1
 function look_and_say_zipper(z) {
     z = z.unzip()
     if(z.focus === void(0)) return z.list.flatten()
-    let target = z.focus, count = 1
-    while(target === (z = z.unzip()).focus) { z = z.remove(); ++count; }
-    z = z.zip().update([count,target])
+    let focus = z.focus, count = 1
+    while(focus === (z = z.unzip()).focus) { z = z.remove(); ++count; }
+    z = z.zip().update([count,focus])
     return look_and_say_zipper(z)
 }
 const look_and_say = l => look_and_say_zipper(l.toZipper())
+```
 
-look_and_say(retake.of(1,2,1,1)) //1,1,1,2,2,1
+and execute...
+```Javascript
+// 1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
+
+look_and_say(retake.of(2,1)) // 1,2,1,1
+look_and_say(retake.of(1,2,1,1)) // 1,1,1,2,2,1
 ```
 
 Both versions (a, b) of look_and_say function reduce the list recursively, while tracking and recording occurence of each element. 
@@ -122,13 +124,14 @@ In the end, the *flatten* tranform, pulls count and sticks it as an element that
 Note how the list is probed with *unzip/zip* Zipper transforms.
 
 
-Both techniques show the power of using immutable values in composing and decomposing data.
+Both techniques show the power of using immutable values in (de)composing data.
 
 Now we can form a sequence and consume lazily.
 
 ```Javascript
 const base = retake.of(1)
 let seq = retake.seq(l => l ? look_and_say(l) : base)
+
 for(let e of seq.take(12)) console.log(...e)
 //1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
 ```
