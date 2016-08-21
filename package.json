@@ -1,6 +1,6 @@
 {
   "name": "retake",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Immutable list, zipper, and transducers done right for JavaScript!",
   "main": "./lib/retake.js",
   "directories": {

@@ -52,7 +52,7 @@ ECMAScript, the language, lacks built-in support for advanced data structures.
 Arrays and Objects in JavaScript are highly efficient and provide a flexible API. 
 However their mutative surface area does not serve well in design of concurrent systems. 
 This is especially true for web apps (React, Flux, Redux et al.) where UIs can be described as a function of application state in a constant fold of events. 
-Use of functional data structures is key to achieve referential transparency in such scenarios.
+Use of functional data structures is key to achieving referential transparency in such scenarios.
 
 ES2015 has introduced game-changing features (for e.g. generator functions, lambdas, iteration protocols, proper tail calls) that improve performance and offer great flexibility in representing computations. 
 As a result, we've benefited from libraries such as Immutable.js and Mori that offer an assortment of fully persistent data structures.
@@ -60,7 +60,7 @@ As a result, we've benefited from libraries such as Immutable.js and Mori that o
 Retake takes a more pragmatic, refined approach in managing *pieces of data* your app cares about *at any given time*.
 It is comprised of List, Zipper, and Transforms that enable proper organization of data for efficient traversal and updates. 
 These functional concepts are implemented and exposed in a way to meet requirements of modern JavaScript apps. 
-The end goal is to free app domain of procedural code by isolating the overhead of persistence and retrieval.
+It helps free your app's domain of procedural code by isolating the overhead of persistence and retrieval. After all the end goal for any software is to deliver manageable and reliable code.
 
 This implementation covers 3 important facets:
 
@@ -106,8 +106,8 @@ console.log(...p1p2p3.take(5)) // a, b, c, d, e*
 ```
 
 This code may seem trivial but it reveals 3 important concepts:
-- *Non-destructive updates* keep the original structure in tact (p2, p1p2 retain original values).
-- *Structural sharing* limits allocation of memory to new data (nodes marked with *).
+- *Non-destructive updates* keep the original structure intact (p2, p1p2 retain original values).
+- *Structural sharing* limits allocation of memory to new data (nodes marked with "*").
 - *Lazy evaluation* defers allocation of memory for new data (" f " is not realized).
 
 These are few basic principles of persistent immutable data structures. I hope the example was informative. 
