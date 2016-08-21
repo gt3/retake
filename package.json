@@ -1,7 +1,7 @@
 {
   "name": "retake",
   "version": "0.0.3",
-  "description": "Retake on classic list and zipper data structures.",
+  "description": "Immutable list, zipper, and transducers done right for JavaScript!",
   "main": "./src/index.js",
   "directories": {
     "doc": "doc",
