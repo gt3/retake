@@ -1,7 +1,13 @@
 Retake
 =========================
 
-Pragmatic data structure and algorithmic transformations for modern JavaScript apps.
+- Persistent data structures
+  - Lazy List
+  - Zipper
+- Transformations with Transducers
+  - map, filter, take, skip, takeUntil
+  - sort, flatten
+  - splitWhen, splitAt
 
 
 ## Installation
@@ -74,10 +80,43 @@ Helpful readings:
 
 ## Code Examples
 
-### 1. Transducers
+### 1. Retake worry-free
+
+Let's create 3 pages worth of sample data.
+```Javascript
+let pages = { 'p1': ['a','b'], 'p2': ['c','d'], 'p3': ['e','f'] }
+```
+
+App starts with some local data already available.
+```Javascript
+function* local() { yield* pages.p2 }
+let p2 = retake.from(local)
+console.log(...p2) // c*, d*
+```
+
+Retrieves remote data for previous and next pages.
+```Javascript
+function* remote_prev() { yield* pages.p1 }
+let p1p2 = p2.prependCollection(remote_prev)
+console.log(...p1p2) // a*, b*, c, d
+
+function* remote_next() { yield* pages.p3 }
+let p1p2p3 = p1p2.appendCollection(remote_next)
+console.log(...p1p2p3.take(5)) // a, b, c, d, e*
+```
+
+This code may seem trivial but it reveals 3 important concepts:
+- *Non-destructive updates* keep the original structure in tact (p2, p1p2 retain original values).
+- *Structural sharing* limits allocation of memory to new data (nodes marked with *).
+- *Lazy evaluation* defers allocation of memory for new data (" f " is not realized).
+
+These are few basic principles of persistent immutable data structures. I hope the example was informative. 
+Next, we'll apply smart transformations to a collection of values.
+
+### 2. Optimized Transformations
 
 ```Javascript
-let list = retake.of('react','om','angular','backbone','ember','knockout','meteor','vue','derby')
+let list = retake.of('react','om','angular','backbone','ember','meteor','vue','derby')
 ```
 Let's transform this list.
 
@@ -103,16 +142,17 @@ console.log(...result) // derby ember meteor react
 Chaining on objects...
 ```Javascript
 //might be tempting
-let result = list.filter(hasR).sort().skip(1)
+let result = list.filter(v => v.indexOf('r') > -1).sort().skip(1)
 console.log(...result) // derby ember meteor react
 
 // _not_ recommended, read more on transducers to understand why
 ```
 
 
-### 2. Look-and-say numbers
+### 3. Immutable values to power your app
 
-Watch this [video](https://youtu.be/ea7lJkEhytA?list=PLt5AfwLFPxWIL8XA1npoNAHseS-j1y-7V) by John Conway for an introduction to this sequence.
+**Look-and-say numbers** - 
+watch this [video](https://youtu.be/ea7lJkEhytA?list=PLt5AfwLFPxWIL8XA1npoNAHseS-j1y-7V) by John Conway for an introduction to this sequence.
 
 Let's first implement a function that produces the "look and say" (next element in sequence).
 
@@ -157,7 +197,7 @@ In b) first occurrence of element is replaced by an array of [count, value], whe
 In the end, the *flatten* transform, pulls count and sticks it as an element that precedes the actual value. 
 Note how the list is probed with *unzip/zip* Zipper transforms.
 
-Both techniques show the power of using immutable values to (de)compose data.
+*Both techniques show the power of using immutable values to (de)compose data.*
 
 Now we can form a sequence and consume lazily.
 
