@@ -103,7 +103,7 @@ console.log(...result) // derby ember meteor react
 Chaining on objects...
 ```Javascript
 //might be tempting
-let result = list.filter(hasR).sort().skip(1)
+let result = list.filter(v => v.indexOf('r') > -1).sort().skip(1)
 console.log(...result) // derby ember meteor react
 
 // _not_ recommended, read more on transducers to understand why
