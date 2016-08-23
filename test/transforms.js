@@ -22,6 +22,9 @@ describe('Transforms', function() {
             oeq([...r.reduce(map(incrSeq())(append))], [...arr.map(incrSeq())])
             oeq([...r.reduce(map(incrSeq())(prepend))], [...arr.map(incrSeq()).reverse()])
         })
+        it('identity map', function() {
+            oeq([...r.map(v => v)], [...arr])
+        })
     })
     describe('filter', function() {
         let r, invoke, arr, t = () => true, f = () => false
@@ -46,6 +49,7 @@ describe('Transforms', function() {
         })
         it('as extension method', function() {
             oeq([...r.take(3)], [1,2,3])
+            oeq([...r.take(10)], arr)
         })
         it('as transforming reducer', function() {
             oeq([...r.reduce(take(3)(append))], [1,2,3])
@@ -83,6 +87,7 @@ describe('Transforms', function() {
         })
         it('as extension method', function() {
             oeq([...r.takeUntil(invoke)], exp)
+            oeq([...r.takeUntil(x => false)], arr)
         })
         it('as transforming reducer', function() {
             oeq([...r.reduce(takeUntil(invoke)(append))], exp)
@@ -204,6 +209,12 @@ describe('Transforms', function() {
         before(function() {
             arr = [1,2,3,4,5,6,7,8,9]
             r = retake.from(arr), r0 = retake.from([])
+        })
+        describe('reducing function', function() {
+            it('should tranform list given a reducing function chained directly (w/o pipe, compose helpers)', function() {
+                let r3 = reduce(skip(2)(take(5)(prepend)))(r)
+                oeq([...r3], arr.slice(2, 7).reverse())
+            })
         })
         describe('composeT', function() {
             it('should compose transforms and have reduce apply default reducer if not provided', function() {
