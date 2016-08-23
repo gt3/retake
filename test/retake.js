@@ -16,6 +16,7 @@ describe('Empty List', function() {
         })
         it('should return undefined value for head', function() {
             eq(empty.first, void(0))
+            assert.ok(empty.head.sentinel)
         })
         it('should have an empty tail', function() {
             eq(empty.tail, empty)
@@ -115,6 +116,7 @@ describe('List', function() {
             let r3 = retake.of(...naturals(3)), r5 = retake.of(...naturals(5))
             assert.ok(r0.done)
             eq(r1.first, 1)
+            assert.ok(!r1.done)
             assert.ok(r1.tail.done)
             eq(r3.first, 1)
             eq(r3.tail.tail.first, 3)

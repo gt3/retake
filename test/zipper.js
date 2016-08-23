@@ -2,8 +2,36 @@ let assert = require('assert')
 let {eq, neq, oeq, oneq, random} = require('./helpers')
 let {identity} = require('../src/utils')
 let retake = require('../src'), empty = retake.empty
+let Zipper = require('../src/list-zipper')
 
 describe('Zipper', function() {
+    describe('create', function() {
+        let r, r2, arr, arr2
+        before(function() {
+            arr = [1,2,3,4,5,6,7,8,9], arr2 = [99,88], arr3 = [101,100]
+            r = retake.from(arr), r2 = retake.from(arr2), r3 = retake.from(arr3)
+        })
+        it('should derive a new zipper from given arguments', function() {
+            let z = Zipper.create(r)
+            eq(z.focus, void(0))
+            eq(z.zip().focus, void(0))
+            eq(z.unzip().focus, arr[0])
+            z = Zipper.create(r, r2)
+            eq(z.focus, arr2[0])
+            eq(z.unzip().focus, arr[0])
+            eq(z.zip().zip().focus, void(0))
+            z = Zipper.create(r, r2, r3)
+            eq(z.zip().focus, arr3[0])
+            z = Zipper.create(r, undefined, r3)
+            eq(z.focus, void(0))
+            eq(z.zip().focus, arr3[0])
+            eq(z.unzip().focus, arr[0])
+        })
+        it('should derive a new zipper from context', function() {
+            let z = Zipper.create.call(r)
+            eq(z.unzip().focus, arr[0])
+        })
+    })
     describe('no side effects', function() {
         let r, z, arr
         before(function() {
