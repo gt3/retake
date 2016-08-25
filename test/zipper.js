@@ -1,7 +1,7 @@
 let assert = require('assert')
 let {eq, neq, oeq, oneq, random} = require('./helpers')
 let {identity} = require('../src/utils')
-let retake = require('../src'), empty = retake.empty
+let retake = require('../src'), empty = retake.empty()
 let Zipper = require('../src/list-zipper')
 
 describe('Zipper', function() {

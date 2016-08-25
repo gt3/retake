@@ -5,7 +5,7 @@ function reduce(fn, init) {
     return (list) => list.reduce(fn, init)
 }
 
-const initialize = (acc, node, next) => next({pivot: node, lte: empty, gt: empty})
+const initialize = (acc, node, next) => next({pivot: node, lte: empty(), gt: empty()})
 
 const partition = comparer => (acc, node, next) => {
     let {pivot,lte,gt} = acc
@@ -15,7 +15,7 @@ const partition = comparer => (acc, node, next) => {
 }
 
 const getMerge = (comparer) => (acc) => {
-    if(!acc || !acc.hasOwnProperty('pivot')) return empty
+    if(!acc || !acc.hasOwnProperty('pivot')) return empty()
     const leftSorted = reduce(sort(comparer)())(acc.lte)
     const rightSorted = reduce(sort(comparer)())(acc.gt)
     return rightSorted.prepend(acc.pivot).prependCollection(leftSorted)
