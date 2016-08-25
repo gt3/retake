@@ -36,7 +36,7 @@ class Zipper extends ZipperTarget {
     static create(...args) {
         return !args || !args.length ? new Zipper(this) : new Zipper(...args)
     }
-    constructor(right, target=empty, left=empty) {
+    constructor(right, target=empty(), left=empty()) {
         super(target)
         Object.assign(this, {_left:left, _right:right})
     }

@@ -4,7 +4,7 @@ const {pullNext, pullReversed, linkIterables, sequenceYielder} = Utils.iteratorU
 const {extend} = Utils.prototypeUtils
 let empty
 
-function List(head = wrap(), getNext = () => empty) {
+function List(head = wrap(), getNext = empty) {
     Object.assign(this, { head, getNext })
 }
 
@@ -23,7 +23,7 @@ List.prototype = {
     get lazy() { return true },
     get first() { return this.done ? void (0) : unwrap(this.head) },
     get tail() { return this.getNext() },
-    reduce(fn, acc = empty) {
+    reduce(fn, acc = empty()) {
         if (this.done) return fn.call(this, acc)
         return fn.call(this, acc, this.head, (acc) => this.tail.reduce(fn, acc))
     },
@@ -37,15 +37,14 @@ List.prototype = {
     makeSiblingOf(...values) { return Factory.of(this, ...values) }
 }
 
-empty = new class extends List {
+empty = memoize0(() => new class extends List {
     get done() { return true }
-    size() { return 0 }
     next() { return this }
     [Symbol.iterator]() { return this }
-}
+})
 
 const next = (value, iterator) => 
-    () => Factory.fromIterator(iterator, empty, pullNext(unwrap(value)))
+    () => Factory.fromIterator(iterator, empty(), pullNext(unwrap(value)))
 
 class Factory {
     static seq(seqFn) {
@@ -58,16 +57,16 @@ class Factory {
         const iterator = linkIterables(...iterables)
         return Factory.fromIterator(iterator)
     }
-    static fromReversed(target, base=empty) {
+    static fromReversed(target, base=empty()) {
         const reversedTarget = (iterable) => pullReversed(linkIterables(iterable))
         const iterator = linkIterables(...[reversedTarget(target), base])
         return Factory.fromIterator(iterator, base)
     }
-    static fromIterator(iterator, base=empty, pullFn=pullNext()) {
+    static fromIterator(iterator, base=empty(), pullFn=pullNext()) {
         const pulled = pullFn(iterator)
         return !pulled || pulled.done ? base : Factory.fromValue(pulled.value, iterator, identity)
     }
-    static fromValue(value, iterable=empty, toIterator=linkIterables) {
+    static fromValue(value, iterable=empty(), toIterator=linkIterables) {
         const node = wrap(value), iterator = toIterator(iterable)
         return new List(node, memoize0(next(value, iterator)))
     }
