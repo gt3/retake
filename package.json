@@ -1,6 +1,6 @@
 {
   "name": "retake",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Pragmatic data structures - immutable list, zipper, and transducers -­ for JavaScript!",
   "main": "./src/index.js",
   "directories": {
