@@ -1,7 +1,7 @@
 let assert = require('assert')
 let {eq, neq, oeq, oneq} = require('./helpers')
 let {identity} = require('../src/utils')
-let retake = require('../src'), empty = retake.empty
+let retake = require('../src'), empty = retake.empty()
 const {Reducers: {prepend, append, counter}, 
         Transformers: {sort,map,filter,take,skip,takeUntil,flatten}, 
             Splitters: {splitAt,splitWhen},
