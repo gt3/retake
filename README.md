@@ -60,7 +60,7 @@ As a result, we've benefited from libraries such as Immutable.js and Mori that o
 Retake takes a more pragmatic, refined approach in managing *pieces of data* your app cares about *at any given time*.
 It is comprised of List, Zipper, and Transforms that enable proper organization of data for efficient traversal and updates. 
 These functional concepts are implemented and exposed in a way to meet requirements of modern JavaScript apps. 
-It helps free your app's domain of procedural code by isolating the overhead of persistence and retrieval. After all the end goal for any software is to deliver manageable and reliable code.
+It helps free your app's domain of procedural code by isolating the overhead of persistence and retrieval. After all, the end goal for any software is to deliver manageable and reliable code.
 
 This implementation covers 3 important facets:
 
