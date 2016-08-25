@@ -99,6 +99,12 @@ describe('List', function() {
             eq(r.tail.first, r2.tail.first)
             eq(r.tail.tail.first, r2.tail.tail.first)
         })
+        it('should return empty list provided an empty iterable', function() {
+            let dummy = function*() { }
+            let r = retake.from(dummy), rr = retake.fromReversed(dummy)
+            assert.ok(r.done)
+            assert.ok(rr.done)
+        })
         it('should return list provided an iterator', function() {
             let naturalsGen = function*(n=0) { while(true) yield ++n; }
             let naturalsIterable = {
@@ -132,7 +138,12 @@ describe('List', function() {
             eq(r.tail.first, 10)
             eq(r.tail.tail.first, 15)
         })
-        it('should be able to return list in reverse order for a finite sequence', function() {
+        it('should return empty list provided an empty continuation', function() {
+            let dummy = () => void(0)
+            let r = retake.seq(dummy)
+            assert.ok(r.done)
+        })
+        it('should return list in reverse order for a finite sequence', function() {
             let naturals = (limit) => (function*(n=0) { while(n<limit) yield ++n; })()
             let r = retake.fromReversed(naturals(5))
             eq(r.first, 5)

@@ -74,12 +74,12 @@ function setPropsReadable(target) {
     return target
 }
 
-function assign(target, extensions, preventOverrides=true) {
+function assign(target, extensions) {
     if(!extensions || !extensions.length) return target
-    if(preventOverrides) setPropsReadable(target)
+    setPropsReadable(target)
     let [extension, ...rest] = extensions
     Object.assign(target, extension)
-    return assign(target, rest, preventOverrides)
+    return assign(target, rest)
 }
 
 function extend(target, ...extensions) {
