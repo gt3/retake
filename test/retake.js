@@ -1,6 +1,6 @@
 let assert = require('assert')
 let {wrap, unwrap} = require('../src/utils')
-let retake = require('../src/retake'), empty = retake.empty()
+let retake = require('../src'), empty = retake.empty()
 let {eq, neq, oeq, oneq} = require('./helpers')
 
 describe('Empty List', function() {
