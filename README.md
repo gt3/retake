@@ -10,16 +10,13 @@ Retake
   - splitWhen, splitAt
 
 
-## Installation
-```
-npm install --save retake
-```
-
-## Usage
+## Setup
 
 - Node (6 or later)
 
-```
+```Javascript
+npm install --save retake
+
 let retake = require('retake')
 ```
 
@@ -84,7 +81,7 @@ Helpful readings:
 
 Let's create 3 pages worth of sample data.
 ```Javascript
-let pages = { 'p1': ['a','b'], 'p2': ['c','d'], 'p3': ['e','f'] }
+let pages = { p1: ['a','b'], p2: ['c','d'], p3: ['e','f'] }
 ```
 
 App starts with some local data already available.
@@ -108,7 +105,7 @@ console.log(...p1p2p3.take(5)) // a, b, c, d, e*
 This code may seem trivial but it reveals 3 important concepts:
 - *Non-destructive updates* keep the original structure intact (p2, p1p2 retain original values).
 - *Structural sharing* limits allocation of memory to new data (nodes marked with "*").
-- *Lazy evaluation* defers allocation of memory for new data (" f " is not realized).
+- *Lazy evaluation* defers allocation of memory for new data ("f" is not realized).
 
 These are few basic principles of persistent immutable data structures. I hope the example was informative. 
 Next, we'll apply smart transformations to a collection of values.
@@ -125,7 +122,7 @@ a) Compose transforms directly
 let t = filter(v => v.indexOf('r') > -1)(sort()(skip(1)(append)))
 ```
 
-b) Use helper to compose transforms
+b) Use helpers to compose transforms
 ```Javascript
 let t = pipeT(filter(v => v.indexOf('r') > -1), sort(), skip(1))
 // or
