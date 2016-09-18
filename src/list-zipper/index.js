@@ -65,9 +65,15 @@ class Zipper extends ZipperTarget {
     removeWhen(pred) {
         return new Zipper(this._right, super.removeWhen(pred), this._left)
     }
-    load(iterable) {
+    appendToTail(iterable) {
         const right = this._right.appendCollection(iterable)
         return new Zipper(right, super.list, this._left)
+    }
+    prependToHead(iterable) {
+        let left = this._left, right = this._right
+        if(super.focus) left = left.appendCollection(iterable)
+        else right = right.prependInReverse(iterable)
+        return new Zipper(right, super.list, left)
     }
 }
 
