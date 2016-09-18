@@ -113,11 +113,20 @@ describe('Zipper', function() {
             oeq([...z3.list].slice(2), arr.slice(4))
         })
         it('should load (append) new elements without modifying source', function() {
-            let z2 = z.unzip(10), z3 = z.load([101,102]).unzip(10)
+            let z2 = z.unzip(10), z3 = z.appendToTail([101,102]).unzip(10)
             eq(z2.focus, 9)
             eq(z3.focus, 101)
             eq(z3.unzip().focus, 102)
             oeq([...z3.list].slice(0,9), arr)
+        })
+        it('should load (prepend) new elements without modifying source', function() {
+            const arr1 = [103, 104], arr2 = [101, 102]
+            let z2 = z.prependToHead([...arr1].reverse()), z3 = z2.unzip(2), z4 = z3.unzip(2), z5 = z4.prependToHead([...arr2].reverse())
+            eq(z.focus, void(0))
+            eq(z2.focus, void(0))
+            oeq([...z3], arr1)
+            eq(z4.focus, z5.focus)
+            oeq([...z5.list], [...arr2, ...arr1, ...arr])
         })
     })
 });
